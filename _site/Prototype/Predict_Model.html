@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="SHIH, HUA-HSUAN">
+
+<title>Predict Model – ISSS608-Y25-26-Group2</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ffa9a6279353761231ec249df0a7fdd3.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<link href="../site_libs/vis-9.1.0/vis-network.min.css" rel="stylesheet">
+
+<script src="../site_libs/vis-9.1.0/vis-network.min.js"></script>
+
+<script src="../site_libs/visNetwork-binding-2.1.4/visNetwork.js"></script>
+
+<script src="../site_libs/FileSaver-1.1.20151003/FileSaver.min.js"></script>
+
+<script src="../site_libs/Blob-1.0/Blob.js"></script>
+
+<script src="../site_libs/canvas-toBlob-1.0/canvas-toBlob.js"></script>
+
+<script src="../site_libs/html2canvas-0.5.0/html2canvas.js"></script>
+
+<script src="../site_libs/jspdf-1.3.2/jspdf.debug.js"></script>
+
+<script src="../site_libs/jquery-1.11.3/jquery.min.js"></script>
+
+<link href="../site_libs/jquery-sparkline-2.1.2/jquery.sparkline.css" rel="stylesheet">
+
+<script src="../site_libs/jquery-sparkline-2.1.2/jquery.sparkline.js"></script>
+
+<script src="../site_libs/sparkline-binding-2.0/sparkline.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">ISSS608-Y25-26-Group2</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <span class="nav-link">
+<span class="menu-text">Overview</span>
+    </span>
+  </li>  
+  <li class="nav-item">
+    <span class="nav-link">
+<span class="menu-text">Shiny App</span>
+    </span>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-prototype" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Prototype</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-prototype">    
+        <li>
+    <a class="dropdown-item" href="../Prototype/EDA_CDA.html">
+ <span class="dropdown-text">EDA and CDA</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Prototype/Cluster.html">
+ <span class="dropdown-text">Cluster Analysis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Prototype/Predict_Model.html">
+ <span class="dropdown-text">Predict Model</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-team" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Team</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-team">    
+        <li class="dropdown-header">Project Proposal</li>
+        <li>
+    <a class="dropdown-item" href="../Team/minutes_of_meeting.html">
+ <span class="dropdown-text">Minutes of Meeting</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#load-packages-and-data" id="toc-load-packages-and-data" class="nav-link active" data-scroll-target="#load-packages-and-data">Load Packages and Data</a></li>
+  <li><a href="#data-pre-processing" id="toc-data-pre-processing" class="nav-link" data-scroll-target="#data-pre-processing">Data Pre-processing</a>
+  <ul class="collapse">
+  <li><a href="#check-for-duplicates" id="toc-check-for-duplicates" class="nav-link" data-scroll-target="#check-for-duplicates">Check for duplicates</a></li>
+  <li><a href="#check-and-handle-missing-value" id="toc-check-and-handle-missing-value" class="nav-link" data-scroll-target="#check-and-handle-missing-value">check and handle missing value</a></li>
+  <li><a href="#confirm-data-type-of-target-variable" id="toc-confirm-data-type-of-target-variable" class="nav-link" data-scroll-target="#confirm-data-type-of-target-variable">Confirm data type of target variable</a></li>
+  <li><a href="#convert-character-variables-to-factors" id="toc-convert-character-variables-to-factors" class="nav-link" data-scroll-target="#convert-character-variables-to-factors">Convert Character Variables to Factors</a></li>
+  <li><a href="#remove-unnecessary-attributes" id="toc-remove-unnecessary-attributes" class="nav-link" data-scroll-target="#remove-unnecessary-attributes">Remove unnecessary attributes</a></li>
+  <li><a href="#export-rds-file-for-shiny" id="toc-export-rds-file-for-shiny" class="nav-link" data-scroll-target="#export-rds-file-for-shiny">Export RDS file for shiny</a></li>
+  </ul></li>
+  <li><a href="#decision-tree" id="toc-decision-tree" class="nav-link" data-scroll-target="#decision-tree">Decision Tree</a>
+  <ul class="collapse">
+  <li><a href="#train-test-split" id="toc-train-test-split" class="nav-link" data-scroll-target="#train-test-split">Train-Test Split</a></li>
+  <li><a href="#build-regression-tree-function" id="toc-build-regression-tree-function" class="nav-link" data-scroll-target="#build-regression-tree-function">Build Regression Tree Function</a></li>
+  <li><a href="#view-regression-tree" id="toc-view-regression-tree" class="nav-link" data-scroll-target="#view-regression-tree">View Regression Tree</a></li>
+  <li><a href="#predict-on-test-data" id="toc-predict-on-test-data" class="nav-link" data-scroll-target="#predict-on-test-data">Predict on Test Data</a></li>
+  <li><a href="#predicted-vs-actual-on-test-data" id="toc-predicted-vs-actual-on-test-data" class="nav-link" data-scroll-target="#predicted-vs-actual-on-test-data">Predicted vs Actual on Test Data</a></li>
+  <li><a href="#feature-importance-of-decision-tree" id="toc-feature-importance-of-decision-tree" class="nav-link" data-scroll-target="#feature-importance-of-decision-tree">Feature Importance of Decision Tree</a></li>
+  <li><a href="#model-performance-metrics" id="toc-model-performance-metrics" class="nav-link" data-scroll-target="#model-performance-metrics">Model Performance Metrics</a></li>
+  </ul></li>
+  <li><a href="#random-forest" id="toc-random-forest" class="nav-link" data-scroll-target="#random-forest">Random Forest</a>
+  <ul class="collapse">
+  <li><a href="#train-test-split-1" id="toc-train-test-split-1" class="nav-link" data-scroll-target="#train-test-split-1">Train-Test Split</a></li>
+  <li><a href="#build-random-forest-function" id="toc-build-random-forest-function" class="nav-link" data-scroll-target="#build-random-forest-function">Build Random Forest Function</a></li>
+  <li><a href="#predict-on-test-data-1" id="toc-predict-on-test-data-1" class="nav-link" data-scroll-target="#predict-on-test-data-1">Predict on Test Data</a></li>
+  <li><a href="#predicted-vs-actual-on-test-data-1" id="toc-predicted-vs-actual-on-test-data-1" class="nav-link" data-scroll-target="#predicted-vs-actual-on-test-data-1">Predicted vs Actual on Test Data</a></li>
+  <li><a href="#feature-importance-of-random-forest" id="toc-feature-importance-of-random-forest" class="nav-link" data-scroll-target="#feature-importance-of-random-forest">Feature Importance of Random Forest</a></li>
+  <li><a href="#model-performance-metrics-1" id="toc-model-performance-metrics-1" class="nav-link" data-scroll-target="#model-performance-metrics-1">Model Performance Metrics</a></li>
+  </ul></li>
+  <li><a href="#ui-design-introduction" id="toc-ui-design-introduction" class="nav-link" data-scroll-target="#ui-design-introduction">UI Design Introduction</a>
+  <ul class="collapse">
+  <li><a href="#control-panel" id="toc-control-panel" class="nav-link" data-scroll-target="#control-panel">Control Panel</a></li>
+  <li><a href="#model-performance" id="toc-model-performance" class="nav-link" data-scroll-target="#model-performance">Model Performance</a></li>
+  <li><a href="#model-visualization" id="toc-model-visualization" class="nav-link" data-scroll-target="#model-visualization">Model Visualization</a></li>
+  <li><a href="#scenario-prediction" id="toc-scenario-prediction" class="nav-link" data-scroll-target="#scenario-prediction">Scenario Prediction</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Predict Model</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>SHIH, HUA-HSUAN </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="load-packages-and-data" class="level1">
+<h1>Load Packages and Data</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, rpart, rpart.plot, sparkline, visNetwork, </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               caret, ranger, patchwork)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>customer_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/customer_data.csv"</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 48723 Columns: 54
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (13): gender, location, income_bracket, occupation, education_level, ma...
+dbl  (29): customer_id, age, household_size, active_products, app_logins_fre...
+lgl   (7): savings_account, credit_card, personal_loan, investment_account, ...
+date  (5): first_tx, last_tx, last_survey_date, last_transaction_date, first...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+<section id="data-pre-processing" class="level1">
+<h1>Data Pre-processing</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(customer_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 48,723
+Columns: 54
+$ customer_id                &lt;dbl&gt; 93716481, 49020929, 52690950, 23199751, 619…
+$ age                        &lt;dbl&gt; 44, 44, 45, 45, 44, 45, 44, 44, 45, 44, 44,…
+$ gender                     &lt;chr&gt; "Male", "Male", "Male", "Male", "Female", "…
+$ location                   &lt;chr&gt; "Pereira, Risaralda", "Cali, Valle del Cauc…
+$ income_bracket             &lt;chr&gt; "Very High", "Medium", "High", "High", "Med…
+$ occupation                 &lt;chr&gt; "Engineer", "Construction Worker", "Constru…
+$ education_level            &lt;chr&gt; "Master", "Bachelor", "Bachelor", "High Sch…
+$ marital_status             &lt;chr&gt; "Married", "Married", "Married", "Single", …
+$ household_size             &lt;dbl&gt; 5, 2, 4, 2, 3, 4, 4, 3, 1, 3, 5, 3, 3, 7, 3…
+$ acquisition_channel        &lt;chr&gt; "Partnership", "Paid Ad", "Paid Ad", "Refer…
+$ customer_segment           &lt;chr&gt; "occasional", "regular", "inactive", "inact…
+$ savings_account            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…
+$ credit_card                &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE…
+$ personal_loan              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
+$ investment_account         &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALS…
+$ insurance_product          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…
+$ active_products            &lt;dbl&gt; 1, 5, 3, 2, 1, 1, 1, 4, 2, 3, 1, 5, 3, 1, 1…
+$ app_logins_frequency       &lt;dbl&gt; 15, 30, 4, 15, 19, 15, 44, 22, 7, 11, 7, 30…
+$ feature_usage_diversity    &lt;dbl&gt; 3, 0, 4, 4, 1, 4, 6, 1, 1, 6, 3, 1, 2, 1, 3…
+$ bill_payment_user          &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE,…
+$ auto_savings_enabled       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FA…
+$ credit_utilization_ratio   &lt;dbl&gt; 0.17871029, NA, NA, NA, 0.40360553, 0.07786…
+$ international_transactions &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0…
+$ failed_transactions        &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0…
+$ tx_count                   &lt;dbl&gt; 76, 10, 10, 23, 18, 15, 24, 45, 134, 13, 18…
+$ avg_tx_value               &lt;dbl&gt; 1679872.4, 5445810.0, 640335.0, 660180.4, 1…
+$ total_tx_volume            &lt;dbl&gt; 127670300, 54458100, 6403350, 15184150, 262…
+$ first_tx                   &lt;date&gt; 2023-01-05, 2023-02-05, 2023-01-31, 2023-0…
+$ last_tx                    &lt;date&gt; 2023-12-25, 2023-12-20, 2023-12-12, 2023-1…
+$ base_satisfaction          &lt;dbl&gt; 9.213372, 6.073093, 8.198643, 7.529577, 6.6…
+$ tx_satisfaction            &lt;dbl&gt; 0.380, 0.050, 0.050, 0.115, 0.090, 0.075, 0…
+$ product_satisfaction       &lt;dbl&gt; 0.6, 0.2, 0.6, 0.4, 0.4, 0.6, 0.4, 0.4, 0.6…
+$ satisfaction_score         &lt;dbl&gt; 5, 3, 4, 4, 3, 4, 4, 4, 5, 4, 4, 5, 4, 3, 4…
+$ nps_score                  &lt;dbl&gt; -7, -46, -29, -31, -47, -29, -34, -36, -4, …
+$ last_survey_date           &lt;date&gt; 2023-12-16, 2023-05-05, 2023-11-16, 2023-0…
+$ support_tickets_count      &lt;dbl&gt; 1, 1, 0, 2, 2, 1, 1, 0, 2, 0, 0, 2, 3, 1, 0…
+$ resolved_tickets_ratio     &lt;dbl&gt; 0.0000000, 1.0000000, 0.0000000, 0.5000000,…
+$ app_store_rating           &lt;dbl&gt; 3.5, 4.0, 5.0, 4.5, 4.0, 4.0, 5.0, 4.5, 4.5…
+$ feedback_sentiment         &lt;chr&gt; "Neutral", "Positive", "Positive", "Positiv…
+$ feature_requests           &lt;chr&gt; "Budgeting tools", NA, NA, "Cryptocurrency …
+$ complaint_topics           &lt;chr&gt; NA, NA, NA, NA, "App performance", NA, NA, …
+$ clv_segment                &lt;chr&gt; "Gold", "Bronze", "Gold", "Bronze", "Gold",…
+$ monthly_transaction_count  &lt;dbl&gt; 1.428571, 1.571429, 2.500000, 1.555556, 2.1…
+$ average_transaction_value  &lt;dbl&gt; 6054025.0, 2127413.6, 3575915.0, 1513353.6,…
+$ total_transaction_volume   &lt;dbl&gt; 60540250, 23401550, 35759150, 21186950, 116…
+$ transaction_frequency      &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…
+$ last_transaction_date      &lt;date&gt; 2023-12-05, 2023-12-18, 2023-10-27, 2023-1…
+$ preferred_transaction_type &lt;chr&gt; "Transfer", "Transfer", "Transfer", "Transf…
+$ first_transaction_date     &lt;date&gt; 2023-01-05, 2023-02-05, 2023-01-31, 2023-0…
+$ weekend_transaction_ratio  &lt;dbl&gt; 0.30000000, 0.18181818, 0.30000000, 0.14285…
+$ avg_daily_transactions     &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…
+$ customer_tenure            &lt;dbl&gt; 11.633333, 11.500000, 8.766667, 10.733333, …
+$ churn_probability          &lt;dbl&gt; 0.3622688, 0.1817896, 0.3212651, 0.3366287,…
+$ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 35978105, 3…</code></pre>
+</div>
+</div>
+<section id="check-for-duplicates" class="level2">
+<h2 class="anchored" data-anchor-id="check-for-duplicates">Check for duplicates</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>duplicate_count <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="fu">duplicated</span>(customer_data))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (duplicate_count <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"There are "</span>, duplicate_count, <span class="st">" duplicate rows in the dataset."</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">"There are no duplicate rows in the dataset."</span>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>There are no duplicate rows in the dataset.</code></pre>
+</div>
+</div>
+<p>A quick check for duplicate records confirms that there are no duplicated customer IDs in the customer dataset.</p>
+</section>
+<section id="check-and-handle-missing-value" class="level2">
+<h2 class="anchored" data-anchor-id="check-and-handle-missing-value">check and handle missing value</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>na_summary <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">column_name =</span> <span class="fu">names</span>(customer_data),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">na_count =</span> <span class="fu">sapply</span>(customer_data, <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x))),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">na_percentage =</span> <span class="fu">sapply</span>(customer_data, <span class="cf">function</span>(x) <span class="fu">mean</span>(<span class="fu">is.na</span>(x)) <span class="sc">*</span> <span class="dv">100</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>na_summary <span class="sc">%&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(na_count <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                      column_name na_count na_percentage
+credit_utilization_ratio credit_utilization_ratio    18263      37.48332
+feature_requests                 feature_requests    16115      33.07473
+complaint_topics                 complaint_topics    24346      49.96819</code></pre>
+</div>
+</div>
+<p>The variables <code>credit_utilization_ratio</code> and <code>feature_requests</code> were removed from the dataset due to their relatively high proportion of missing values. For the variable <code>complaint_topics</code>, missing values were interpreted as cases where customers did not report any specific complaints. Therefore, these missing entries were recoded as “No complaint”.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>customer_data <span class="ot">&lt;-</span> customer_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>credit_utilization_ratio, <span class="sc">-</span>feature_requests)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>customer_data <span class="ot">&lt;-</span> customer_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">complaint_topics =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(complaint_topics),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                              <span class="st">"No complaint"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                              complaint_topics)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="confirm-data-type-of-target-variable" class="level2">
+<h2 class="anchored" data-anchor-id="confirm-data-type-of-target-variable">Confirm data type of target variable</h2>
+<p>The target variable churn_probability was checked before modeling. The summary statistics indicate that the variable ranges from 0.114 to 0.501 and is stored as a numeric type, confirming that a regression tree is appropriate for this analysis.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(customer_data<span class="sc">$</span>churn_probability)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.1143  0.3029  0.3540  0.3429  0.3927  0.5006 </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(customer_data<span class="sc">$</span>churn_probability)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+</div>
+</section>
+<section id="convert-character-variables-to-factors" class="level2">
+<h2 class="anchored" data-anchor-id="convert-character-variables-to-factors">Convert Character Variables to Factors</h2>
+<p>All character variables were converted into factor type so that they can be correctly treated as categorical variables in the decision tree model.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>customer_data <span class="ot">&lt;-</span> customer_data <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), as.factor))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="remove-unnecessary-attributes" class="level2">
+<h2 class="anchored" data-anchor-id="remove-unnecessary-attributes">Remove unnecessary attributes</h2>
+<p>Several attributes were removed during the preprocessing stage to improve model reliability. First, customer_id was removed because it represents a unique identifier for each customer. Including such variables in the model would not contribute to predictive power and may lead to overfitting.</p>
+<p>In addition, <code>first_tx</code> and <code>first_transaction_date</code> were identified as duplicated attributes describing the customer’s first transaction date. Since the first transaction timing is considered to have limited interpretability for predicting churn behavior in the current analysis, these variables were removed.</p>
+<p>Similarly, <code>last_tx</code> and <code>last_transaction_date</code> share the same definition of the customer’s most recent transaction date. However, inconsistencies were observed between the two columns. To avoid potential misuse of ambiguous information, both variables were excluded from the modeling dataset.</p>
+<p>The variable <code>last_survey_date</code> was removed from the model because its date format is incompatible with decision tree algorithms. Furthermore, initial assessments indicated that the specific date of the last survey has no direct correlation with churn probability, making it a redundant feature for this analysis.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>customer_data <span class="ot">&lt;-</span> customer_data <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>customer_id,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>first_tx,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>first_transaction_date,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>last_tx,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>last_transaction_date,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="sc">-</span>last_survey_date</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(customer_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 48,723
+Columns: 46
+$ age                        &lt;dbl&gt; 44, 44, 45, 45, 44, 45, 44, 44, 45, 44, 44,…
+$ gender                     &lt;fct&gt; Male, Male, Male, Male, Female, Female, Mal…
+$ location                   &lt;fct&gt; "Pereira, Risaralda", "Cali, Valle del Cauc…
+$ income_bracket             &lt;fct&gt; Very High, Medium, High, High, Medium, Medi…
+$ occupation                 &lt;fct&gt; Engineer, Construction Worker, Construction…
+$ education_level            &lt;fct&gt; Master, Bachelor, Bachelor, High School, Ba…
+$ marital_status             &lt;fct&gt; Married, Married, Married, Single, Married,…
+$ household_size             &lt;dbl&gt; 5, 2, 4, 2, 3, 4, 4, 3, 1, 3, 5, 3, 3, 7, 3…
+$ acquisition_channel        &lt;fct&gt; Partnership, Paid Ad, Paid Ad, Referral, Pa…
+$ customer_segment           &lt;fct&gt; occasional, regular, inactive, inactive, po…
+$ savings_account            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…
+$ credit_card                &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE…
+$ personal_loan              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
+$ investment_account         &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALS…
+$ insurance_product          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…
+$ active_products            &lt;dbl&gt; 1, 5, 3, 2, 1, 1, 1, 4, 2, 3, 1, 5, 3, 1, 1…
+$ app_logins_frequency       &lt;dbl&gt; 15, 30, 4, 15, 19, 15, 44, 22, 7, 11, 7, 30…
+$ feature_usage_diversity    &lt;dbl&gt; 3, 0, 4, 4, 1, 4, 6, 1, 1, 6, 3, 1, 2, 1, 3…
+$ bill_payment_user          &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE,…
+$ auto_savings_enabled       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FA…
+$ international_transactions &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0…
+$ failed_transactions        &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0…
+$ tx_count                   &lt;dbl&gt; 76, 10, 10, 23, 18, 15, 24, 45, 134, 13, 18…
+$ avg_tx_value               &lt;dbl&gt; 1679872.4, 5445810.0, 640335.0, 660180.4, 1…
+$ total_tx_volume            &lt;dbl&gt; 127670300, 54458100, 6403350, 15184150, 262…
+$ base_satisfaction          &lt;dbl&gt; 9.213372, 6.073093, 8.198643, 7.529577, 6.6…
+$ tx_satisfaction            &lt;dbl&gt; 0.380, 0.050, 0.050, 0.115, 0.090, 0.075, 0…
+$ product_satisfaction       &lt;dbl&gt; 0.6, 0.2, 0.6, 0.4, 0.4, 0.6, 0.4, 0.4, 0.6…
+$ satisfaction_score         &lt;dbl&gt; 5, 3, 4, 4, 3, 4, 4, 4, 5, 4, 4, 5, 4, 3, 4…
+$ nps_score                  &lt;dbl&gt; -7, -46, -29, -31, -47, -29, -34, -36, -4, …
+$ support_tickets_count      &lt;dbl&gt; 1, 1, 0, 2, 2, 1, 1, 0, 2, 0, 0, 2, 3, 1, 0…
+$ resolved_tickets_ratio     &lt;dbl&gt; 0.0000000, 1.0000000, 0.0000000, 0.5000000,…
+$ app_store_rating           &lt;dbl&gt; 3.5, 4.0, 5.0, 4.5, 4.0, 4.0, 5.0, 4.5, 4.5…
+$ feedback_sentiment         &lt;fct&gt; Neutral, Positive, Positive, Positive, Posi…
+$ complaint_topics           &lt;fct&gt; No complaint, No complaint, No complaint, N…
+$ clv_segment                &lt;fct&gt; Gold, Bronze, Gold, Bronze, Gold, Bronze, B…
+$ monthly_transaction_count  &lt;dbl&gt; 1.428571, 1.571429, 2.500000, 1.555556, 2.1…
+$ average_transaction_value  &lt;dbl&gt; 6054025.0, 2127413.6, 3575915.0, 1513353.6,…
+$ total_transaction_volume   &lt;dbl&gt; 60540250, 23401550, 35759150, 21186950, 116…
+$ transaction_frequency      &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…
+$ preferred_transaction_type &lt;fct&gt; Transfer, Transfer, Transfer, Transfer, Pay…
+$ weekend_transaction_ratio  &lt;dbl&gt; 0.30000000, 0.18181818, 0.30000000, 0.14285…
+$ avg_daily_transactions     &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…
+$ customer_tenure            &lt;dbl&gt; 11.633333, 11.500000, 8.766667, 10.733333, …
+$ churn_probability          &lt;dbl&gt; 0.3622688, 0.1817896, 0.3212651, 0.3366287,…
+$ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 35978105, 3…</code></pre>
+</div>
+</div>
+</section>
+<section id="export-rds-file-for-shiny" class="level2">
+<h2 class="anchored" data-anchor-id="export-rds-file-for-shiny">Export RDS file for shiny</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_rds</span>(customer_data, <span class="st">"data/customer_data_clean.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>customer_data_clean <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">"data/customer_data_clean.rds"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(customer_data_clean)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 48,723
+Columns: 46
+$ age                        &lt;dbl&gt; 44, 44, 45, 45, 44, 45, 44, 44, 45, 44, 44,…
+$ gender                     &lt;fct&gt; Male, Male, Male, Male, Female, Female, Mal…
+$ location                   &lt;fct&gt; "Pereira, Risaralda", "Cali, Valle del Cauc…
+$ income_bracket             &lt;fct&gt; Very High, Medium, High, High, Medium, Medi…
+$ occupation                 &lt;fct&gt; Engineer, Construction Worker, Construction…
+$ education_level            &lt;fct&gt; Master, Bachelor, Bachelor, High School, Ba…
+$ marital_status             &lt;fct&gt; Married, Married, Married, Single, Married,…
+$ household_size             &lt;dbl&gt; 5, 2, 4, 2, 3, 4, 4, 3, 1, 3, 5, 3, 3, 7, 3…
+$ acquisition_channel        &lt;fct&gt; Partnership, Paid Ad, Paid Ad, Referral, Pa…
+$ customer_segment           &lt;fct&gt; occasional, regular, inactive, inactive, po…
+$ savings_account            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…
+$ credit_card                &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE…
+$ personal_loan              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…
+$ investment_account         &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALS…
+$ insurance_product          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…
+$ active_products            &lt;dbl&gt; 1, 5, 3, 2, 1, 1, 1, 4, 2, 3, 1, 5, 3, 1, 1…
+$ app_logins_frequency       &lt;dbl&gt; 15, 30, 4, 15, 19, 15, 44, 22, 7, 11, 7, 30…
+$ feature_usage_diversity    &lt;dbl&gt; 3, 0, 4, 4, 1, 4, 6, 1, 1, 6, 3, 1, 2, 1, 3…
+$ bill_payment_user          &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE,…
+$ auto_savings_enabled       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FA…
+$ international_transactions &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0…
+$ failed_transactions        &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0…
+$ tx_count                   &lt;dbl&gt; 76, 10, 10, 23, 18, 15, 24, 45, 134, 13, 18…
+$ avg_tx_value               &lt;dbl&gt; 1679872.4, 5445810.0, 640335.0, 660180.4, 1…
+$ total_tx_volume            &lt;dbl&gt; 127670300, 54458100, 6403350, 15184150, 262…
+$ base_satisfaction          &lt;dbl&gt; 9.213372, 6.073093, 8.198643, 7.529577, 6.6…
+$ tx_satisfaction            &lt;dbl&gt; 0.380, 0.050, 0.050, 0.115, 0.090, 0.075, 0…
+$ product_satisfaction       &lt;dbl&gt; 0.6, 0.2, 0.6, 0.4, 0.4, 0.6, 0.4, 0.4, 0.6…
+$ satisfaction_score         &lt;dbl&gt; 5, 3, 4, 4, 3, 4, 4, 4, 5, 4, 4, 5, 4, 3, 4…
+$ nps_score                  &lt;dbl&gt; -7, -46, -29, -31, -47, -29, -34, -36, -4, …
+$ support_tickets_count      &lt;dbl&gt; 1, 1, 0, 2, 2, 1, 1, 0, 2, 0, 0, 2, 3, 1, 0…
+$ resolved_tickets_ratio     &lt;dbl&gt; 0.0000000, 1.0000000, 0.0000000, 0.5000000,…
+$ app_store_rating           &lt;dbl&gt; 3.5, 4.0, 5.0, 4.5, 4.0, 4.0, 5.0, 4.5, 4.5…
+$ feedback_sentiment         &lt;fct&gt; Neutral, Positive, Positive, Positive, Posi…
+$ complaint_topics           &lt;fct&gt; No complaint, No complaint, No complaint, N…
+$ clv_segment                &lt;fct&gt; Gold, Bronze, Gold, Bronze, Gold, Bronze, B…
+$ monthly_transaction_count  &lt;dbl&gt; 1.428571, 1.571429, 2.500000, 1.555556, 2.1…
+$ average_transaction_value  &lt;dbl&gt; 6054025.0, 2127413.6, 3575915.0, 1513353.6,…
+$ total_transaction_volume   &lt;dbl&gt; 60540250, 23401550, 35759150, 21186950, 116…
+$ transaction_frequency      &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…
+$ preferred_transaction_type &lt;fct&gt; Transfer, Transfer, Transfer, Transfer, Pay…
+$ weekend_transaction_ratio  &lt;dbl&gt; 0.30000000, 0.18181818, 0.30000000, 0.14285…
+$ avg_daily_transactions     &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…
+$ customer_tenure            &lt;dbl&gt; 11.633333, 11.500000, 8.766667, 10.733333, …
+$ churn_probability          &lt;dbl&gt; 0.3622688, 0.1817896, 0.3212651, 0.3366287,…
+$ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 35978105, 3…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="decision-tree" class="level1">
+<h1>Decision Tree</h1>
+<section id="train-test-split" class="level2">
+<h2 class="anchored" data-anchor-id="train-test-split">Train-Test Split</h2>
+<p>The Shiny application allows users to customize the train-test split ratio. By default, the system is configured with an 80/20 split, allocating 80% of the dataset for training and the remaining 20% for testing.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  customer_data_clean<span class="sc">$</span>churn_probability,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="fl">0.8</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">list =</span> <span class="cn">FALSE</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>df_train <span class="ot">&lt;-</span> customer_data_clean[train_index, ]</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>df_test  <span class="ot">&lt;-</span> customer_data_clean[<span class="sc">-</span>train_index, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="build-regression-tree-function" class="level2">
+<h2 class="anchored" data-anchor-id="build-regression-tree-function">Build Regression Tree Function</h2>
+<p>Since the target variable <code>churn_probability</code> is a continuous variable, we implemented a regression tree rather than a classification tree. In the current code, the model training function is parameterized specifically for min_split, complexity_parameter, and max_depth. Looking ahead, the Shiny application will expand this flexibility, allowing users to not only tune these parameters but also select their own set of predictors and customize the data partition ratio.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>tree_model <span class="ot">&lt;-</span> <span class="cf">function</span>(min_split, complexity_parameter, max_depth) {</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rpart</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    churn_probability <span class="sc">~</span> .,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_train,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"anova"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">rpart.control</span>(</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">minsplit =</span> min_split,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">cp =</span> complexity_parameter,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">maxdepth =</span> max_depth</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>fit_tree <span class="ot">&lt;-</span> <span class="fu">tree_model</span>(<span class="at">min_split =</span> <span class="dv">10</span>, <span class="at">complexity_parameter =</span> <span class="fl">0.001</span>, <span class="at">max_depth =</span> <span class="dv">10</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="view-regression-tree" class="level2">
+<h2 class="anchored" data-anchor-id="view-regression-tree">View Regression Tree</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">visTree</span>(fit_tree, <span class="at">edgesFontSize =</span> <span class="dv">14</span>, <span class="at">nodesFontSize =</span> <span class="dv">16</span>, <span class="at">width =</span> <span class="st">"100%"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="htmlwidget-b05e333f9c2c0e39bdf9" style="width:100%;height:600px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b05e333f9c2c0e39bdf9">{"x":{"nodes":{"id":[1,2,4,8,16,32,33,17,9,18,36,72,73,37,19,38,39,5,10,20,40,41,82,83,21,42,43,11,22,23,3,6,12,24,48,49,98,99,25,50,51,102,103,13,26,52,53,27,54,55,7,14,28,56,57,114,228,229,115,29,58,59,118,236,237,119,15,30,60,61,122,123,31,62,63],"label":["active_products","active_products","active_products","age","app_logins_frequency","0.17","0.201","0.227","age","app_logins_frequency","satisfaction_score","0.2","0.227","0.253","app_logins_frequency","0.267","0.3","age","app_logins_frequency","satisfaction_score","0.251","age","0.266","0.287","satisfaction_score","0.283","0.31","app_logins_frequency","0.316","0.349","active_products","age","app_logins_frequency","satisfaction_score","0.3","age","0.317","0.337","satisfaction_score","0.333","age","0.349","0.369","app_logins_frequency","satisfaction_score","0.348","0.373","satisfaction_score","0.379","0.406","age","app_logins_frequency","satisfaction_score","0.351","age","app_logins_frequency","0.358","0.375","0.387","satisfaction_score","0.383","app_logins_frequency","age","0.393","0.412","0.424","app_logins_frequency","satisfaction_score","0.398","app_logins_frequency","0.413","0.431","satisfaction_score","0.429","0.455"],"level":[1,2,3,4,5,6,6,5,4,5,6,7,7,6,5,6,6,3,4,5,6,6,7,7,5,6,6,4,5,5,2,3,4,5,6,6,7,7,5,6,6,7,7,4,5,6,6,5,6,6,3,4,5,6,6,7,8,8,7,5,6,6,7,8,8,7,4,5,6,6,7,7,5,6,6],"color":["#F1B8C2","#F1B8C2","#F1B8C2","#CBC999","#8DD4C1","#E6E0F8","#DBC7F0","#D3B3E9","#CBC999","#8DD4C1","#B4C7ED","#DCC8F0","#D3B4E9","#CA9FE3","#8DD4C1","#C695DF","#BB7CD7","#CBC999","#8DD4C1","#B4C7ED","#CBA1E3","#CBC999","#C695DF","#BF85DA","#B4C7ED","#C189DB","#B874D5","#8DD4C1","#B66FD3","#AB55CB","#F1B8C2","#CBC999","#8DD4C1","#B4C7ED","#BB7BD7","#CBC999","#B66ED3","#AF5FCE","#B4C7ED","#B062CF","#CBC999","#AB55CB","#A546C6","#8DD4C1","#B4C7ED","#AB56CB","#A343C5","#B4C7ED","#A13EC3","#9929BD","#CBC999","#8DD4C1","#B4C7ED","#AA54CA","#CBC999","#8DD4C1","#A84FC9","#A342C5","#9F38C2","#B4C7ED","#A03BC3","#8DD4C1","#CBC999","#9D33C0","#9725BB","#931BB8","#8DD4C1","#B4C7ED","#9B2FBF","#8DD4C1","#9624BB","#9016B7","#B4C7ED","#9117B7","#8904B1"],"value":[38980,11592,5825,1920,1237,786,451,683,3905,2654,1633,401,1232,1021,1251,814,437,5767,3766,2420,563,1857,916,941,1346,343,1003,2001,1291,710,27388,11746,7724,4941,1191,3750,1825,1925,2783,673,2110,1046,1064,4022,2584,687,1897,1438,390,1048,15642,10486,6627,1563,5064,2496,1095,1401,2568,3859,981,2878,2021,962,1059,857,5156,3345,920,2425,1063,1362,1811,486,1325],"shape":["dot","dot","dot","dot","dot","square","square","square","dot","dot","dot","square","square","square","dot","square","square","dot","dot","dot","square","dot","square","square","dot","square","square","dot","square","square","dot","dot","dot","dot","square","dot","square","square","dot","square","dot","square","square","dot","dot","square","square","dot","square","square","dot","dot","dot","square","dot","dot","square","square","square","dot","square","dot","dot","square","square","square","dot","dot","square","dot","square","square","dot","square","square"],"title":["<div style=\"text-align:center;\">N : <b>100%<\/b> (38980)<br>Complexity : <b>0.581<\/b><br>Mean : <b>0.343<\/b><br>Variance : <b>0.004<\/b><\/div>","<div style=\"text-align:center;\">N : <b>29.7%<\/b> (11592)<br>Complexity : <b>0.074<\/b><br>Mean : <b>0.264<\/b><br>Variance : <b>0.002<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> >= 2.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>14.9%<\/b> (5825)<br>Complexity : <b>0.018<\/b><br>Mean : <b>0.231<\/b><br>Variance : <b>0.002<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> >= 3.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4.9%<\/b> (1920)<br>Complexity : <b>0.005<\/b><br>Mean : <b>0.198<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.2%<\/b> (1237)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.181<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> >= 4.5<br><b> age <\/b> < 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2%<\/b> (786)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.17<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> >= 4.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.2%<\/b> (451)<br>Complexity : <b>0<\/b><br>Mean : <b>0.201<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> >= 4.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.8%<\/b> (683)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.227<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> >= 4.5<br><b> age <\/b> >= 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>10%<\/b> (3905)<br>Complexity : <b>0.01<\/b><br>Mean : <b>0.247<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>6.8%<\/b> (2654)<br>Complexity : <b>0.004<\/b><br>Mean : <b>0.233<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> < 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4.2%<\/b> (1633)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.22<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1%<\/b> (401)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.2<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.2%<\/b> (1232)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.227<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.6%<\/b> (1021)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.253<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.2%<\/b> (1251)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.279<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> >= 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.1%<\/b> (814)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.267<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.1%<\/b> (437)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.3<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 3.5 <= <b>active_products<\/b> < 4.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>14.8%<\/b> (5767)<br>Complexity : <b>0.015<\/b><br>Mean : <b>0.298<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>9.7%<\/b> (3766)<br>Complexity : <b>0.005<\/b><br>Mean : <b>0.282<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>6.2%<\/b> (2420)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.271<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.4%<\/b> (563)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.251<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4.8%<\/b> (1857)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.277<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.3%<\/b> (916)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.266<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b>  <\/b> 37 <= <b>age<\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.4%<\/b> (941)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.287<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 37<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.5%<\/b> (1346)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.303<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>0.9%<\/b> (343)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.283<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.6%<\/b> (1003)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.31<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>5.1%<\/b> (2001)<br>Complexity : <b>0.003<\/b><br>Mean : <b>0.328<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> >= 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.3%<\/b> (1291)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.316<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.8%<\/b> (710)<br>Complexity : <b>0<\/b><br>Mean : <b>0.349<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 2.5 <= <b>active_products<\/b> < 3.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>70.3%<\/b> (27388)<br>Complexity : <b>0.094<\/b><br>Mean : <b>0.376<\/b><br>Variance : <b>0.002<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 2.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>30.1%<\/b> (11746)<br>Complexity : <b>0.032<\/b><br>Mean : <b>0.348<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>19.8%<\/b> (7724)<br>Complexity : <b>0.01<\/b><br>Mean : <b>0.332<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>12.7%<\/b> (4941)<br>Complexity : <b>0.004<\/b><br>Mean : <b>0.321<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.1%<\/b> (1191)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.3<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>9.6%<\/b> (3750)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.327<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4.7%<\/b> (1825)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.317<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b>  <\/b> 37 <= <b>age<\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4.9%<\/b> (1925)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.337<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 37<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>7.1%<\/b> (2783)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.353<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.7%<\/b> (673)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.333<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>5.4%<\/b> (2110)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.359<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.7%<\/b> (1046)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.349<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b>  <\/b> 37 <= <b>age<\/b> < 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.7%<\/b> (1064)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.369<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> < 37<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>10.3%<\/b> (4022)<br>Complexity : <b>0.005<\/b><br>Mean : <b>0.378<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> >= 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>6.6%<\/b> (2584)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.367<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.8%<\/b> (687)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.348<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4.9%<\/b> (1897)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.373<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.7%<\/b> (1438)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.399<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1%<\/b> (390)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.379<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.7%<\/b> (1048)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.406<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b>  <\/b> 1.5 <= <b>active_products<\/b> < 2.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>40.1%<\/b> (15642)<br>Complexity : <b>0.04<\/b><br>Mean : <b>0.397<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>26.9%<\/b> (10486)<br>Complexity : <b>0.014<\/b><br>Mean : <b>0.383<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>17%<\/b> (6627)<br>Complexity : <b>0.005<\/b><br>Mean : <b>0.371<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4%<\/b> (1563)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.351<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>13%<\/b> (5064)<br>Complexity : <b>0.003<\/b><br>Mean : <b>0.377<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>6.4%<\/b> (2496)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.367<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b>  <\/b> 37 <= <b>age<\/b> < 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.8%<\/b> (1095)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.358<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b>  <\/b> 37 <= <b>age<\/b> < 52<br><b> app_logins_frequency <\/b> >= 28<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.6%<\/b> (1401)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.375<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b>  <\/b> 37 <= <b>age<\/b> < 52<br><b>  <\/b> 17 <= <b>app_logins_frequency<\/b> < 28<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>6.6%<\/b> (2568)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.387<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 37<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>9.9%<\/b> (3859)<br>Complexity : <b>0.003<\/b><br>Mean : <b>0.403<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.5%<\/b> (981)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.383<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>7.4%<\/b> (2878)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.409<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>5.2%<\/b> (2021)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.403<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b>  <\/b> 9 <= <b>app_logins_frequency<\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.5%<\/b> (962)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.393<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b>  <\/b> 37 <= <b>age<\/b> < 52<br><b>  <\/b> 9 <= <b>app_logins_frequency<\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.7%<\/b> (1059)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.412<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 37<br><b>  <\/b> 9 <= <b>app_logins_frequency<\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.2%<\/b> (857)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.424<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> < 52<br><b> app_logins_frequency <\/b> < 9<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>13.2%<\/b> (5156)<br>Complexity : <b>0.007<\/b><br>Mean : <b>0.428<\/b><br>Variance : <b>0.001<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>8.6%<\/b> (3345)<br>Complexity : <b>0.002<\/b><br>Mean : <b>0.416<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.4%<\/b> (920)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.398<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>6.2%<\/b> (2425)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.423<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>2.7%<\/b> (1063)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.413<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> >= 28<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.5%<\/b> (1362)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.431<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b>  <\/b> 17 <= <b>app_logins_frequency<\/b> < 28<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>4.6%<\/b> (1811)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.448<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>1.2%<\/b> (486)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.429<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> >= 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>","<div style=\"text-align:center;\">N : <b>3.4%<\/b> (1325)<br>Complexity : <b>0.001<\/b><br>Mean : <b>0.455<\/b><br>Variance : <b>0<\/b><hr class = \"rPartvisNetwork\">\n<div class =\"showOnMe2\"><div style=\"text-align:center;\"><U style=\"color:blue;\"  onmouseover=\"this.style.cursor='pointer';\" onmouseout=\"this.style.cursor='default';\">Rules<\/U><\/div>\n<div class=\"showMeRpartTTp2\" style=\"display:none;\">\n<b> active_products <\/b> < 1.5<br><b> age <\/b> >= 52<br><b> app_logins_frequency <\/b> < 17<br><b> satisfaction_score <\/b> < 4.5<\/script><script type=\"text/javascript\">$(document).ready(function(){\n$(\".showOnMe2\").click(function(){\n$(\".showMeRpartTTp2\").toggle();\n$.sparkline_display_visible();\n});\n  });<\/script><\/div><\/div>\n\n<\/div>"],"fixed":[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],"colorClust":["#AD5ACC","#C797E0","#D2B0E8","#DCCAF1","#E2D7F5","#E6E0F8","#DBC7F0","#D3B3E9","#CCA4E4","#D1AFE8","#D5B9EB","#DCC8F0","#D3B4E9","#CA9FE3","#C28CDC","#C695DF","#BB7CD7","#BC7DD8","#C189DC","#C592DE","#CBA1E3","#C38DDD","#C695DF","#BF85DA","#BA79D6","#C189DB","#B874D5","#B266D0","#B66FD3","#AB55CB","#A240C4","#AB56CB","#B162CF","#B46BD2","#BB7BD7","#B266D0","#B66ED3","#AF5FCE","#AA53CA","#B062CF","#A84EC8","#AB55CB","#A546C6","#A23FC4","#A548C7","#AB56CB","#A343C5","#9B2FBF","#A13EC3","#9929BD","#9B30BF","#A03BC3","#A445C5","#AA54CA","#A240C4","#A547C6","#A84FC9","#A342C5","#9F38C2","#9A2CBE","#A03BC3","#9727BC","#992CBD","#9D33C0","#9725BB","#931BB8","#9219B7","#9521BA","#9B2FBF","#931CB8","#9624BB","#9016B7","#8B09B2","#9117B7","#8904B1"],"labelClust":[0.343,0.264,0.231,0.198,0.181,0.17,0.201,0.227,0.247,0.233,0.22,0.2,0.227,0.253,0.279,0.267,0.3,0.298,0.282,0.271,0.251,0.277,0.266,0.287,0.303,0.283,0.31,0.328,0.316,0.349,0.376,0.348,0.332,0.321,0.3,0.327,0.317,0.337,0.353,0.333,0.359,0.349,0.369,0.378,0.367,0.348,0.373,0.399,0.379,0.406,0.397,0.383,0.371,0.351,0.377,0.367,0.358,0.375,0.387,0.403,0.383,0.409,0.403,0.393,0.412,0.424,0.428,0.416,0.398,0.423,0.413,0.431,0.448,0.429,0.455],"Leaf":[0,0,0,0,0,1,1,1,0,0,0,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,1,0,1,1,0,0,0,0,1,0,1,1,0,1,0,1,1,0,0,1,1,0,1,1,0,0,0,1,0,0,1,1,1,0,1,0,0,1,1,1,0,0,1,0,1,1,0,1,1],"font.size":[16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16,16],"scaling.min":[22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5],"scaling.max":[22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5,22.5]},"edges":{"id":["edge1","edge2","edge3","edge4","edge5","edge6","edge7","edge8","edge9","edge10","edge11","edge12","edge13","edge14","edge15","edge16","edge17","edge18","edge19","edge20","edge21","edge22","edge23","edge24","edge25","edge26","edge27","edge28","edge29","edge30","edge31","edge32","edge33","edge34","edge35","edge36","edge37","edge38","edge39","edge40","edge41","edge42","edge43","edge44","edge45","edge46","edge47","edge48","edge49","edge50","edge51","edge52","edge53","edge54","edge55","edge56","edge57","edge58","edge59","edge60","edge61","edge62","edge63","edge64","edge65","edge66","edge67","edge68","edge69","edge70","edge71","edge72","edge73","edge74"],"from":[1,2,4,8,16,16,8,4,9,18,36,36,18,9,19,19,2,5,10,20,20,41,41,10,21,21,5,11,11,1,3,6,12,24,24,49,49,12,25,25,51,51,6,13,26,26,13,27,27,3,7,14,28,28,57,114,114,57,14,29,29,59,118,118,59,7,15,30,30,61,61,15,31,31],"to":[2,4,8,16,32,33,17,9,18,36,72,73,37,19,38,39,5,10,20,40,41,82,83,21,42,43,11,22,23,3,6,12,24,48,49,98,99,25,50,51,102,103,13,26,52,53,27,54,55,7,14,28,56,57,114,228,229,115,29,58,59,118,236,237,119,15,30,60,61,122,123,31,62,63],"label":[">= 2.5",">= 3.5",">= 4.5","< 52",">= 17","< 17",">= 52","< 4.5","< 52",">= 17",">= 4.5","< 4.5","< 17",">= 52",">= 17","< 17","< 3.5","< 52",">= 17",">= 4.5","< 4.5",">= 37","< 37","< 17",">= 4.5","< 4.5",">= 52",">= 17","< 17","< 2.5",">= 1.5","< 52",">= 17",">= 4.5","< 4.5",">= 37","< 37","< 17",">= 4.5","< 4.5",">= 37","< 37",">= 52",">= 17",">= 4.5","< 4.5","< 17",">= 4.5","< 4.5","< 1.5","< 52",">= 17",">= 4.5","< 4.5",">= 37",">= 28","< 28","< 37","< 17",">= 4.5","< 4.5",">= 9",">= 37","< 37","< 9",">= 52",">= 17",">= 4.5","< 4.5",">= 28","< 28","< 17",">= 4.5","< 4.5"],"value":[11592,5825,1920,1237,786,451,683,3905,2654,1633,401,1232,1021,1251,814,437,5767,3766,2420,563,1857,916,941,1346,343,1003,2001,1291,710,27388,11746,7724,4941,1191,3750,1825,1925,2783,673,2110,1046,1064,4022,2584,687,1897,1438,390,1048,15642,10486,6627,1563,5064,2496,1095,1401,2568,3859,981,2878,2021,962,1059,857,5156,3345,920,2425,1063,1362,1811,486,1325],"title":["<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\">>=2.5<\/div>","<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\">>=3.5<\/div>","<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=52<\/div>","<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\"><3.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=37<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><37<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\"><2.5<\/div>","<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\">>=1.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=37<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><37<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=37<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><37<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>active_products<\/b><\/div><div style=\"text-align:center;\"><1.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=37<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=28<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><28<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><37<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=9<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=37<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\"><37<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><9<\/div>","<div style=\"text-align:center;\"><b>age<\/b><\/div><div style=\"text-align:center;\">>=52<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\">>=28<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><28<\/div>","<div style=\"text-align:center;\"><b>app_logins_frequency<\/b><\/div><div style=\"text-align:center;\"><17<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\">>=4.5<\/div>","<div style=\"text-align:center;\"><b>satisfaction_score<\/b><\/div><div style=\"text-align:center;\"><4.5<\/div>"],"color":["#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7","#8181F7"],"font.size":[14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14,14],"font.align":["horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal","horizontal"],"smooth.enabled":[true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],"smooth.type":["cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier","cubicBezier"],"smooth.roundness":[0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot"},"manipulation":{"enabled":false},"layout":{"hierarchical":{"enabled":true,"direction":"UD"}},"interaction":{"dragNodes":false,"selectConnectedEdges":false,"tooltipDelay":500,"zoomSpeed":1},"edges":{"scaling":{"label":{"enabled":false}}}},"groups":null,"width":"100%","height":"600px","idselection":{"enabled":false,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-weight:bold;font-size:20px;text-align:center;"},"submain":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"footer":{"text":"","style":"font-family:Georgia, Times New Roman, Times, serif;font-size:12px;text-align:center;"},"background":"rgba(0, 0, 0, 0)","highlight":{"enabled":true,"hoverNearest":false,"degree":{"from":50000,"to":0},"algorithm":"hierarchical","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":true,"fit":true,"resetHighlight":true,"clusterOptions":{"fixed":true,"physics":false},"keepCoord":true,"labelSuffix":"(cluster)"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;\n                      white-space: nowrap;\n                      font-family: cursive;font-size:12px;font-color:purple;background-color: #E6E6E6;\n                      border-radius: 15px;","OnceEvents":{"stabilized":"function() { \n        this.setOptions({layout:{hierarchical:false}, physics:{solver:'barnesHut', enabled:true, stabilization : false}, nodes : {physics : false, fixed : true}});\n    }"},"legend":{"width":0.1,"useGroups":false,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true,"nodes":{"label":["active_products","age","app_logins_frequency","satisfaction_score"],"color":["#F1B8C2","#CBC999","#8DD4C1","#B4C7ED"],"shape":["dot","dot","dot","dot"],"size":[22,22,22,22],"Leaf":[0,0,0,0],"font.size":[16,16,16,16],"id":[10000,10001,10002,10003]},"nodesToDataframe":true},"tree":{"updateShape":true,"shapeVar":"dot","shapeY":"square","colorVar":{"variable":["active_products","age","app_logins_frequency","satisfaction_score"],"color":["#F1B8C2","#CBC999","#8DD4C1","#B4C7ED"]},"colorY":{"colRamp":["function (x) ","roundcolor(cbind(palette[[1L]](x), palette[[2L]](x), palette[[3L]](x), ","    if (alpha) palette[[4L]](x))) * 255"],"colorTerm":["#AD5ACC","#C797E0","#D2B0E8","#DCCAF1","#E2D7F5","#E6E0F8","#DBC7F0","#D3B3E9","#CCA4E4","#D1AFE8","#D5B9EB","#DCC8F0","#D3B4E9","#CA9FE3","#C28CDC","#C695DF","#BB7CD7","#BC7DD8","#C189DC","#C592DE","#CBA1E3","#C38DDD","#C695DF","#BF85DA","#BA79D6","#C189DB","#B874D5","#B266D0","#B66FD3","#AB55CB","#A240C4","#AB56CB","#B162CF","#B46BD2","#BB7BD7","#B266D0","#B66ED3","#AF5FCE","#AA53CA","#B062CF","#A84EC8","#AB55CB","#A546C6","#A23FC4","#A548C7","#AB56CB","#A343C5","#9B2FBF","#A13EC3","#9929BD","#9B30BF","#A03BC3","#A445C5","#AA54CA","#A240C4","#A547C6","#A84FC9","#A342C5","#9F38C2","#9A2CBE","#A03BC3","#9727BC","#992CBD","#9D33C0","#9725BB","#931BB8","#9219B7","#9521BA","#9B2FBF","#931CB8","#9624BB","#9016B7","#8B09B2","#9117B7","#8904B1"],"colorY":["#E6E0F8","#8904B1"],"vardecidedClust":[0.343,0.264,0.231,0.198,0.181,0.17,0.201,0.227,0.247,0.233,0.22,0.2,0.227,0.253,0.279,0.267,0.3,0.298,0.282,0.271,0.251,0.277,0.266,0.287,0.303,0.283,0.31,0.328,0.316,0.349,0.376,0.348,0.332,0.321,0.3,0.327,0.317,0.337,0.353,0.333,0.359,0.349,0.369,0.378,0.367,0.348,0.373,0.399,0.379,0.406,0.397,0.383,0.371,0.351,0.377,0.367,0.358,0.375,0.387,0.403,0.383,0.409,0.403,0.393,0.412,0.424,0.428,0.416,0.398,0.423,0.413,0.431,0.448,0.429,0.455]}},"export":{"type":"png","css":"float:right;-webkit-border-radius: 10;\n                  -moz-border-radius: 10;\n                  border-radius: 10px;\n                  font-family: Arial;\n                  color: #ffffff;\n                  font-size: 12px;\n                  background: #090a0a;\n                  padding: 4px 8px 4px 4px;\n                  text-decoration: none;","background":"#fff","name":"network.png","label":"Export as png"}},"evals":["OnceEvents.stabilized"],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="predict-on-test-data" class="level2">
+<h2 class="anchored" data-anchor-id="predict-on-test-data">Predict on Test Data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df_test<span class="sc">$</span>pred_tree <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_tree, <span class="at">newdata =</span> df_test)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="predicted-vs-actual-on-test-data" class="level2">
+<h2 class="anchored" data-anchor-id="predicted-vs-actual-on-test-data">Predicted vs Actual on Test Data</h2>
+<p>To evaluate the predictive performance, a scatter plot of predicted versus actual churn probabilities was constructed. The strong alignment of data points along the 45-degree reference line demonstrates the high reliability of the regression tree in estimating churn risks.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_test, <span class="fu">aes</span>(<span class="at">x =</span> churn_probability, <span class="at">y =</span> pred_tree)) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted vs Actual on Test Data"</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Actual Churn Probability"</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted Churn Probability"</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Predict_Model_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="feature-importance-of-decision-tree" class="level2">
+<h2 class="anchored" data-anchor-id="feature-importance-of-decision-tree">Feature Importance of Decision Tree</h2>
+<p>We extract the variable.importance attribute from the fit_tree model and convert it into a structured table format for easier processing. The variables are then sorted in descending order based on their importance scores, and only the top 10 most influential features are retained. This approach prevents the visualization from becoming overcrowded and ensures that the most critical drivers of the model are clearly highlighted.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>tree_importance <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variable =</span> <span class="fu">names</span>(fit_tree<span class="sc">$</span>variable.importance),</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Importance =</span> <span class="fu">as.numeric</span>(fit_tree<span class="sc">$</span>variable.importance)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Importance))</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>tree_importance <span class="sc">%&gt;%</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Variable, Importance), <span class="at">y =</span> Importance)) <span class="sc">+</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Feature Importance of Decision Tree"</span>,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Variable"</span>,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Importance"</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Predict_Model_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="model-performance-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="model-performance-metrics">Model Performance Metrics</h2>
+<p>This code segment calculates key performance metrics to evaluate the accuracy of our regression model on the testing dataset:</p>
+<p>RMSE (Root Mean Square Error): Measures the average magnitude of the error by taking the square root of average squared differences. It is particularly sensitive to large outliers.</p>
+<p>MAE (Mean Absolute Error): Represents the average absolute difference between predicted and actual values, offering a more intuitive measure of prediction error.</p>
+<p>R-squared (<span class="math inline">\(R^2\)</span>): Calculated as the square of the correlation between predicted and actual values. It indicates the proportion of variance in churn_probability explained by the model.</p>
+<p>Looking forward, these performance metrics will be integrated into the Shiny application dashboard. This will allow users to monitor the model’s accuracy in real-time as they adjust parameters or update datasets.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>rmse_value <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((df_test<span class="sc">$</span>churn_probability <span class="sc">-</span> df_test<span class="sc">$</span>pred_tree)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>mae_value  <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(df_test<span class="sc">$</span>churn_probability <span class="sc">-</span> df_test<span class="sc">$</span>pred_tree))</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>r2_value   <span class="ot">&lt;-</span> <span class="fu">cor</span>(df_test<span class="sc">$</span>churn_probability, df_test<span class="sc">$</span>pred_tree)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"RMSE"</span>, <span class="st">"MAE"</span>, <span class="st">"R-squared"</span>),</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">round</span>(<span class="fu">c</span>(rmse_value, mae_value, r2_value), <span class="dv">4</span>)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  Metric     Value
+  &lt;chr&gt;      &lt;dbl&gt;
+1 RMSE      0.0138
+2 MAE       0.0108
+3 R-squared 0.958 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="random-forest" class="level1">
+<h1>Random Forest</h1>
+<section id="train-test-split-1" class="level2">
+<h2 class="anchored" data-anchor-id="train-test-split-1">Train-Test Split</h2>
+<p>Similar to the decision tree model, the Shiny application allows users to customize the train-test split ratio for the random forest model. By default, the current implementation also uses an 80/20 split, where 80% of the dataset is allocated to the training set and the remaining 20% is reserved for testing.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>train_index_rf <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  customer_data_clean<span class="sc">$</span>churn_probability,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="fl">0.8</span>,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">list =</span> <span class="cn">FALSE</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>df_train_rf <span class="ot">&lt;-</span> customer_data_clean[train_index_rf, ]</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>df_test_rf  <span class="ot">&lt;-</span> customer_data_clean[<span class="sc">-</span>train_index_rf, ]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="build-random-forest-function" class="level2">
+<h2 class="anchored" data-anchor-id="build-random-forest-function">Build Random Forest Function</h2>
+<p>we use the ranger engine through the caret framework. The current code is parameterized for the number of trees, allowing the model complexity to be adjusted. After the Shiny application will allow users to choose their own predictors, customize the train-test split ratio, and modify the number of trees interactively.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rf_grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">mtry =</span> <span class="fu">max</span>(<span class="dv">1</span>, <span class="fu">floor</span>(<span class="fu">sqrt</span>(<span class="fu">ncol</span>(df_train_rf) <span class="sc">-</span> <span class="dv">1</span>))),</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">splitrule =</span> <span class="st">"variance"</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">min.node.size =</span> <span class="dv">5</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>rf_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">"none"</span>)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="cf">function</span>(num_trees) {</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">train</span>(</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    churn_probability <span class="sc">~</span> .,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> df_train_rf,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"ranger"</span>,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">trControl =</span> rf_control,</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">tuneGrid =</span> rf_grid,</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">num.trees =</span> num_trees,</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">importance =</span> <span class="st">"impurity"</span></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>fit_rf <span class="ot">&lt;-</span> <span class="fu">rf_model</span>(<span class="at">num_trees =</span> <span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="predict-on-test-data-1" class="level2">
+<h2 class="anchored" data-anchor-id="predict-on-test-data-1">Predict on Test Data</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df_test_rf<span class="sc">$</span>pred_rf <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit_rf, <span class="at">newdata =</span> df_test_rf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="predicted-vs-actual-on-test-data-1" class="level2">
+<h2 class="anchored" data-anchor-id="predicted-vs-actual-on-test-data-1">Predicted vs Actual on Test Data</h2>
+<p>To evaluate the predictive performance, a scatter plot of predicted versus actual churn probabilities was constructed. Similar to the decision tree model, a strong concentration of points around the 45-degree reference line indicates that the random forest model is able to generate reliable estimates of churn risk.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_test_rf, <span class="fu">aes</span>(<span class="at">x =</span> churn_probability, <span class="at">y =</span> pred_rf)) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Predicted vs Actual on Test Data"</span>,</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Actual Churn Probability"</span>,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Predicted Churn Probability"</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Predict_Model_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="feature-importance-of-random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="feature-importance-of-random-forest">Feature Importance of Random Forest</h2>
+<p>We extract the variable importance scores from the fitted random forest model using the <code>varImp()</code> function and convert them into a structured table format for easier interpretation. The variables are then sorted in descending order according to their importance scores, and only the top 10 most influential features are displayed.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>rf_importance <span class="ot">&lt;-</span> <span class="fu">varImp</span>(fit_rf)<span class="sc">$</span>importance <span class="sc">%&gt;%</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">"Variable"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Importance =</span> Overall) <span class="sc">%&gt;%</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Importance))</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>rf_importance <span class="sc">%&gt;%</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Variable, Importance), <span class="at">y =</span> Importance)) <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Feature Importance of Random Forest"</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Variable"</span>,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Importance"</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">13</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Predict_Model_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="model-performance-metrics-1" class="level2">
+<h2 class="anchored" data-anchor-id="model-performance-metrics-1">Model Performance Metrics</h2>
+<p>The concept is same as decision tree metrics.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>rmse_value_rf <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((df_test_rf<span class="sc">$</span>churn_probability <span class="sc">-</span> df_test_rf<span class="sc">$</span>pred_rf)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>mae_value_rf  <span class="ot">&lt;-</span> <span class="fu">mean</span>(<span class="fu">abs</span>(df_test_rf<span class="sc">$</span>churn_probability <span class="sc">-</span> df_test_rf<span class="sc">$</span>pred_rf))</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>r2_value_rf   <span class="ot">&lt;-</span> <span class="fu">cor</span>(df_test_rf<span class="sc">$</span>churn_probability, df_test_rf<span class="sc">$</span>pred_rf)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"RMSE"</span>, <span class="st">"MAE"</span>, <span class="st">"R-squared"</span>),</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">round</span>(<span class="fu">c</span>(rmse_value_rf, mae_value_rf, r2_value_rf), <span class="dv">4</span>)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  Metric     Value
+  &lt;chr&gt;      &lt;dbl&gt;
+1 RMSE      0.0316
+2 MAE       0.0243
+3 R-squared 0.909 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="ui-design-introduction" class="level1">
+<h1>UI Design Introduction</h1>
+<p>This Predict Model Shiny app enables users to construct either a Decision Tree or a Random Forest model by selecting input variables and tuning key hyperparameters. Users can adjust the train/test split ratio for both models, as well as model-specific parameters such as minimum split, maximum depth, and complexity parameter (for Decision Tree), or the number of trees (for Random Forest).</p>
+<p>Upon model completion, the app provides comprehensive performance metrics, including RMSE, MAE, and R-squared. It also features interactive visualizations: the Decision Tree structure (exclusive to the tree model), the distribution of predicted vs.&nbsp;actual values, and feature importance (available for both). To enhance practical utility, a “Scenario Prediction” section is integrated, allowing users to input specific values and obtain real-time predictions based on the active model.</p>
+<p><img src="images/clipboard-4178123747.png" class="img-fluid"></p>
+<section id="control-panel" class="level2">
+<h2 class="anchored" data-anchor-id="control-panel">Control Panel</h2>
+<p>The Left Control Panel allows users to adjust key model settings, including variable selection and the train/test split ratio for both models. Additionally, users can modify model-specific parameters: minimum split, maximum depth, and complexity parameter (for Decision Tree), or the number of trees (for Random Forest). It also includes parameter definitions to help users better understand the technical meaning and impact of each setting.</p>
+<ul>
+<li><p>Decision Tree</p>
+<p><img src="images/clipboard-564498122.png" class="img-fluid"></p></li>
+</ul>
+<!-- -->
+<ul>
+<li><p>Random Forest</p>
+<p><img src="images/clipboard-3703075994.png" class="img-fluid"></p></li>
+</ul>
+</section>
+<section id="model-performance" class="level2">
+<h2 class="anchored" data-anchor-id="model-performance">Model Performance</h2>
+<p>This section summarizes how well the decision tree performs on the test dataset. After clicking “Build Model,” the app automatically calculates RMSE, MAE, and R-squared to evaluate prediction accuracy and overall model fit.</p>
+<ul>
+<li><p>Decision Tree</p>
+<p><img src="images/clipboard-1589619322.png" class="img-fluid"></p></li>
+<li><p>Random Forest</p>
+<p><img src="images/clipboard-1637959753.png" class="img-fluid"></p></li>
+</ul>
+</section>
+<section id="model-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="model-visualization">Model Visualization</h2>
+<p>Displays the main visual outputs of the trained model, including the tree structure (for Decision Tree), predicted vs actual results on the test dataset, and the top 10 most important variables. This section helps users interpret model behavior and evaluate prediction performance.</p>
+<ul>
+<li><p>Decision Tree</p>
+<p><img src="images/clipboard-501234892.png" class="img-fluid"></p></li>
+<li><p>Random Forest</p>
+<p><img src="images/clipboard-3394370475.png" class="img-fluid"></p></li>
+</ul>
+</section>
+<section id="scenario-prediction" class="level2">
+<h2 class="anchored" data-anchor-id="scenario-prediction">Scenario Prediction</h2>
+<p>Allows users to test a custom scenario by entering values for the variables used in the current model. The app then generates the predicted churn probability and displays the corresponding terminal node and decision path.</p>
+<ul>
+<li><p>Decision Tree</p>
+<p><img src="images/clipboard-2134408216.png" class="img-fluid"></p></li>
+<li><p>Random Forest</p>
+<p><img src="images/clipboard-3603814979.png" class="img-fluid"></p></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

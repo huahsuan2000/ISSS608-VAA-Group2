@@ -1,0 +1,19 @@
+---
+title: "Project Proposal"
+---
+
+## Motivation
+
+## Objectives
+
+## Data
+
+## Methodology
+
+## Prototype Sketches
+
+## R Packages
+
+## Project Schedule
+
+![](images/clipboard-3582234841.png)

@@ -1,11 +1,66 @@
 ---
-title: "ISSS608-VAA-Group2"
+page-layout: full
+format:
+  html:
+    title-block-style: none
 ---
 
-This is a Quarto website.
+```{=html}
+<div class="hero-image-wrapper">
+  <img src="background2.png" alt="Customer Churn Analytics homepage banner" class="hero-image">
+</div>
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
 
-```{r}
-1 + 1
-```
+.quarto-title-block,
+#quarto-margin-sidebar,
+#TOC,
+.toc-actions,
+nav.page-navigation,
+.breadcrumb {
+  display: none !important;
+}
+
+#quarto-content,
+main.content,
+.page-columns,
+.page-full,
+.content,
+.column-page,
+.column-body {
+  margin: 0 !important;
+  padding: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.hero-image-wrapper {
+  width: 100vw;
+  min-height: calc(100vh - 74px);
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+}
+
+.hero-image {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 74px);
+  object-fit: cover;
+  object-position: center center;
+}
+
+@media (max-width: 768px) {
+  .hero-image-wrapper {
+    min-height: calc(100vh - 60px);
+  }
+
+  .hero-image {
+    height: calc(100vh - 60px);
+  }
+}
+</style>

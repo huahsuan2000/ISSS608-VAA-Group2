@@ -1,0 +1,35 @@
+---
+title: "ISSS608 Group 2 Meeting Minutes"
+---
+
+**AY2025-2026 August Term Minutes of Meeting**
+
+**Date**: 28-Feb-2026 (Saturday)\
+**Time**: 4:00pm - 5:00pm\
+**Attendees**:\
+- LI Huaqiu\
+- SHIH Hua-Hsuan\
+- Walaiporn Pawitranon\
+\
+
+## Selection of Topic for Group Project
+
+1.  Hua-Hsuan started the meeting by giving everyone a briefing on the project. She outlined the specific tasks involved, explained the connection between the individual assignments and the group project, and clarified that the main purpose of this meeting was to decide what to include in the final web and to assign responsibilities among team members.
+
+2.  After the brief overview, Walaiporn suggested that we should first select a prototype to use as a reference. She then opened and interpreted the two existing prototypes, explaining the analytical approaches they used and the insights derived from their analyses.
+
+3.  After the overview, the group moved on to the voting stage. Everyone voted to use Tanzania Tourism Analysis as the reference direction for this project.
+
+4.  After selecting the prototype to reference and the general analytical techniques to use, the meeting moved to the main agenda, choosing the most suitable topic and dataset from the three provided options for this project. Huaqiu pointed out that the ACRA dataset explicitly states that it is “suitable for teams that are interested in building Geospatial Analytics Applications,” which would be more appropriate if we were using the second prototype as our analytical direction. Hua-Hsuan and Walaiporn also agreed with this point.
+
+5.  Next, Hua-Hsuan mentioned that the description of the COFINFAD – Colombian Fintech Financial Analytics Dataset states that it is suitable for building Data Science and Analytics Applications, including but not limited to Exploratory Data Analysis, Confirmatory Data Analysis, Cluster Analysis, Exploratory Modelling, and Predictive Modelling. This aligns well with the analytical direction and techniques we plan to use for this project.
+
+    Walaiporn then added that, due to time constraints, choosing a time-series dataset would require additional time to find suitable data. Moreover, there would be uncertainty about whether the collected data could effectively train our models and whether the project could proceed smoothly. If practical issues arise and the analysis cannot continue because of data limitations, we might have to switch datasets, which would delay the project timeline. Therefore, to minimize risk, Walaiporn also agreed to use the COFINFAD – Colombian Fintech Financial Analytics Dataset.
+
+    In the final voting round, everyone unanimously agreed with this choice.
+
+## Preparation for Group Project Proposal
+
+1.  The meeting then moved on to the task allocation stage. It was finally decided that Hua-Hsuan would be responsible for the Predictive Modelling section, Walaiporn would handle the Exploratory Data Analysis and Confirmatory Data Analysis, and Huaqiu would take charge of the Cluster Analysis part.
+
+2.  There being no other matters, the meeting ended at 5:00 pm.

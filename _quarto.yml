@@ -2,20 +2,32 @@ project:
   type: website
 
 website:
-  title: "ISSS608-VAA-Group2"
+  title: "ISSS608-Y25-26-Group2"
   navbar:
-    left:
+    pinned: True
+    right:
       - href: index.qmd
         text: Home
-      - about.qmd
+      - text: Overview
+      - text: Shiny App
+      - text: Prototype
+        menu: 
+        - text: "EDA and CDA"
+          href: "Prototype/EDA_CDA.html"
+        - text: "Cluster Analysis"
+          href: "Prototype/Cluster.html"
+        - text: "Predict Model"
+          href: "Prototype/Predict_Model.html"
+      - text: Team
+        menu:
+        - text: "Project Proposal"
+          href: "Team/Proposal.html"
+        - text: "Minutes of Meeting"
+          href: "Team/minutes_of_meeting.html"
 
 format:
   html:
-    theme:
-      - cosmo
-      - brand
-    css: styles.css
+    theme: flatly
     toc: true
 
 editor: visual
-
