@@ -1,5 +1,5 @@
 ---
-title: "EDA & CDA"
+title: "Exploratory Data Analysis & Confirmatory Data Analysis"
 author: "Walaiporn Pawitranon"
 ---
 
@@ -42,7 +42,7 @@ The project uses `p_load()` of pacman package to check if the R packages are ins
 The following code chunk is used to install and launch the R packages.
 
 ```{r}
-pacman::p_load(dplyr,tidyr,ggplot2,readxl,scales,ggstatsplot,patchwork,lubridate)
+pacman::p_load(dplyr,tidyr,ggplot2,readxl,scales,ggstatsplot,patchwork,lubridate, readr)
 ```
 
 ## 2.3 Import Data
@@ -154,6 +154,8 @@ customer <- customer |>
       breaks = c(0,25,50,100),
       labels = c("Rarely","Often","Always"),
       include.lowest = TRUE))
+
+
 ```
 
 ### 2.4.4 Check logic Consistency
@@ -451,9 +453,11 @@ These findings support the presence of seasonality and provide a strong foundati
 
 The Digital Engagement dashboard was developed using `ggplot2` to summarize user activity, engagement behavior, and retention-related metrics.
 
-First, key engagement KPIs were calculated, including total users (`nrow()`), average app login frequency, average monthly transaction count, average churn probability (formatted as percentage), and average Net Promoter Score (NPS). These metrics provide a high-level overview of platform engagement and customer sentiment.
+The key engagement KPIs were calculated, including total users (`nrow()`), average app login frequency, average monthly transaction count, and average churn probability (formatted as percentage). These metrics provide a high-level overview of platform engagement and customer sentiment.
 
-```{r, fig.width=10, fig.height=7}
+Several visualizations are used to explore relationships in the data. `geom_point()` creates scatter plots to examine the relationships between app login frequency and churn probability, and between monthly transaction count and total transaction volume, while a regression line `(geom_smooth(method = "lm"))` highlights the overall trend between engagement and churn risk. In addition, `geom_boxplot()` is used to show the distribution of feature usage diversity across different satisfaction score levels.
+
+```{r, fig.width=10, fig.height=8}
 #| echo: true
 #| code-fold: true
 #| code-summary: "Code"
@@ -465,23 +469,20 @@ avg_tx_freq <- round(mean(customer$monthly_transaction_count, na.rm = TRUE),2)
 kpi_plot <- ggplot() +
   annotate("text", x=1, y=5, label=paste("Total Users:", total_users), size=5) +
   annotate("text", x=1, y=4, label=paste("Avg Logins:", avg_logins), size=5) +
-  annotate("text", x=1, y=3, label=paste("Avg Monthly Tx:", avg_tx_freq), size=5) +
+  annotate("text", x=1, y=3, label=paste("Avg Monthly Transaction:", avg_tx_freq), size=5) +
   xlim(0,2) + ylim(0,6) +
   theme_void()
 
-login_plot <- ggplot(customer, aes(x = app_logins_frequency)) +
-  geom_histogram(bins=10) +
-  theme_minimal() +
-  labs(title="App Login Frequency Distribution",
-       x="Login Frequency",
-       y="Users")
+login_churn_plot <- ggplot(customer, aes(x = app_logins_frequency, y = churn_probability)) +
+        geom_point(alpha = 0.6, color = "#2C7FB8") +
+        geom_smooth(method = "lm", se = FALSE, color = "red") +
+        theme_minimal() +
+        labs(title = "Relationship Between App Login Frequency and Churn")
 
-feature_plot <- ggplot(customer, aes(x = feature_usage_diversity)) +
-  geom_histogram(bins=10) +
-  theme_minimal() +
-  labs(title="Feature Usage Diversity",
-       x="Number of Features Used",
-       y="Users")
+feature_sat_plot <- ggplot(customer, aes(x = satisfaction_score, y = feature_usage_diversity))+
+        geom_boxplot() +
+        theme_minimal() +
+        labs(title = "Distribution of Feature Usage by Satiafaction Score")
 
 transaction_plot <- ggplot(customer,
        aes(x = monthly_transaction_count,
@@ -492,29 +493,23 @@ transaction_plot <- ggplot(customer,
        x="Monthly Transaction Count",
        y="Total Transaction Volume")
 
-kpi_plot /(login_plot | feature_plot) / transaction_plot
+kpi_plot /(login_churn_plot | feature_sat_plot) / transaction_plot
 
 ```
 
 ::: {.callout-tip title="Insight"}
--   Most users log in between moderate ranges, while a smaller portion shows very high login frequency.
+-   The relationship between app login frequency and churn probability shows a negative trend. Customers who log into the app more frequently tend to have lower churn probability, suggesting that higher engagement is associated with better customer retention.
 
--   Most users utilize only a limited number of features, with fewer customers exploring a wide range of functionalities.
+-   The feature usage diversity increases with higher satisfaction levels. Customers with very high satisfaction scores tend to use more app features, as shown by the higher median and wider distribution in the boxplot.
 
--   The relationship between login frequency and satisfaction appears relatively weak, as indicated by the nearly flat regression line.
-
--   There is a visible concentration of customers with moderate churn probability and varying CLV levels.
-
--   The scatter plot shows a positive relationship between transaction count and total transaction volume.
-
-The Digital Engagement analysis reveals that while customer activity levels are moderate, overall satisfaction and loyalty indicators remain weak. Engagement quantity alone does not guarantee satisfaction, suggesting that improving service quality and user experience may be more impactful than simply increasing login frequency.
+-   The Transaction Frequency vs Volume plot shows a positive relationship between transaction count and total transaction volume.
 :::
 
 ## 3.5 Customer Experience
 
-In this section, we explore customer experience by examining key metrics and relationships between engagement, satisfaction, and churn. The average churn probability provide a high-level view of overall customer experience. `geom_point()` are used to visualize how app login frequency relates to satisfaction and how churn probability relates to customer lifetime value (CLV).
+In this section, customer experience is analyzed by examining key metrics and relationships between engagement, satisfaction, feedback, and churn. The average churn probability provides a high-level overview of overall customer retention risk. Several visualizations are used to explore these relationships: `geom_boxplot()` illustrates how satisfaction relates to app login frequency and churn probability, `geom_point()` shows the relationship between churn probability and customer lifetime value (CLV), and `geom_tile()` visualizes the relationship between feedback sentiment and satisfaction score. Together, these visualizations help identify patterns in customer behavior and highlight factors associated with customer experience and churn risk.
 
-```{r, fig.width=8, fig.height=5}
+```{r, fig.width=10, fig.height=8}
 #| echo: true
 #| code-fold: true
 #| code-summary: "Code"
@@ -526,14 +521,13 @@ kpi_plot <- ggplot() +
   theme_void()
 
 engagement_satisfaction_plot <- ggplot(customer,
-       aes(x = app_logins_frequency,
-           y = satisfaction_score)) +
-  geom_point() +
-  geom_smooth(method="lm", se=FALSE) +
+       aes(x =satisfaction_score,
+           y = app_logins_frequency)) +
+  geom_boxplot() +
   theme_minimal() +
-  labs(title="Engagement vs Satisfaction",
-       x="App Login Frequency",
-       y="Satisfaction Score")
+  labs(title="Satisfaction VS Engagement",
+       x="Satisfaction Score",
+       y="App Login Frequency")
 
 churn_plot <- ggplot(customer,
        aes(x = churn_probability,
@@ -544,7 +538,30 @@ churn_plot <- ggplot(customer,
        x="Churn Probability",
        y="Customer Lifetime Value")
 
-kpi_plot /(engagement_satisfaction_plot | churn_plot) 
+
+x <- "feedback_sentiment"
+y <- "satisfaction_score"
+
+df <- customer %>%
+  count(.data[[x]], .data[[y]])
+
+feedback_plot <- ggplot(df,
+            aes_string(x = x, y = y, fill = "n")) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  theme_minimal() +
+  labs(title = "Feedback Sentiment VS Satisfaction Score")
+
+satisfaction_churn_plot <- ggplot(customer,
+       aes(x = satisfaction_score,
+           y = churn_probability)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title="Satisfaction VS Churn Probability",
+       x="Satisfaction Score",
+       y="Churn Probability")
+
+kpi_plot /(engagement_satisfaction_plot + churn_plot)/ ( feedback_plot + satisfaction_churn_plot)
 
 ```
 
@@ -553,11 +570,11 @@ kpi_plot /(engagement_satisfaction_plot | churn_plot)
 
 -   Customer engagement, measured by app login frequency, is positively associated with satisfaction: more frequent logins tend to correspond with higher satisfaction scores.
 
-<!-- -->
-
 -   The churn probability vs. CLV plot shows that most customers have moderate churn probability, but those with higher churn probability generally have lower customer lifetime value (CLV).
 
--   These findings suggest that improving customer engagement and satisfaction may help reduce churn and protect overall customer value.
+-   The Feedback sentiment VS Satisfaction score shows that positive feedback related to higher satisfaction score.
+
+-   The Satisfaction VS Churn Probability shows that the higher satsfaction score result in lower churn probability.
 :::
 
 ## 3.6 Geographical Distribution of Customers
@@ -570,7 +587,7 @@ pacman::p_load(sf, tmap)
 
 ### 3.6.1 Importing Geospatial Data into R
 
-The code chunk below uses the st_read() function of sf package to import gadm41_COL_1 shapefile into R as a simple feature data frame
+The code chunk below uses the `st_read()` function of sf package to import gadm41_COL_1 shapefile into R as a simple feature data frame
 
 ```{r}
 mpsz <- st_read(dsn = "data/geospatial", 
@@ -816,163 +833,7 @@ p24 <- ggbarstats(customer, app_logins_group, churn_group, type="nonparametric",
 p23/p24
 ```
 
-# 5. Storyboard - UI Design
-
-This dashboard is designed to help users explore customer behavior in a Latin American fintech platform. The storyboard structure guides users from a high-level overview to deeper analysis, including customer demographics, transaction patterns, customer segmentation, and churn analysis.
-
-The dashboard contains four main sections:
-
-1.  Summary
-
-2.  Exploration
-
-3.  Cluster Analysis
-
-4.  Decision Tree Analysis
-
-Each page allows users to interact with the data through filters, visualizations, and statistical analysis.
-
-## 5.1 Summary tab
-
-The Summary page provides a high-level overview of the customer dataset and key business metrics. It allows users to quickly understand the overall status of the customer base before exploring detailed analysis.
-
-![](images/clipboard-1194473738.png)
-
-At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These KPIs help decision-makers quickly assess the overall performance of the fintech platform.
-
-Below the KPI section, several charts provide an overview of customer characteristics and behaviors. These visualizations provide a quick understanding of the customer base and highlight patterns that may require further investigation.
-
-## 5.2 Exploration tab
-
-The Exploration page allows users to perform Exploratory Data Analysis (EDA) by dynamically selecting variables and visualization types and the confirmatory Data Analysis page allows users to statistically validate relationships between variables. This page helps users explore relationships between different customer attributes.
-
-### 5.2.1 Customer overview tab
-
-The main goal of this page is to allow users to interactively explore customer characteristics and distributions.
-
-![](images/clipboard-893315867.png)
-
-At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These metrics provide quick insights into customer demographics and risk levels.
-
-#### Variable Selection
-
-There are a filter bar that users can choose a categorical variable (X variable) from the dropdown menu to display in the visualization.
-
-Examples include:
-
--   Gender
-
--   Income bracket
-
--   Education level
-
--   Customer segment
-
--   Acquisition channel
-
-This allows users to explore how different customer characteristics are distributed.
-
-#### Plot Type Selection
-
-Users can choose different visualization types such as bar chart, box plot, and other chart types
-
-This flexibility helps users view the data from different perspectives
-
-#### Export Option
-
-This allows users to easily share findings with stakeholders.
-
-#### Geographic Distribution
-
-A map visualization displays the geographical distribution of customers across regions, helping identify areas with higher customer concentration.
-
-### 5.2.2 Transaction behavior tab
-
-The Transaction Behavior tab allows users to analyze customer transaction patterns over time. This page focuses on understanding how different customer segments perform in terms of transaction activity and transaction value.
-
-By allowing users to filter the data based on customer value segments, time periods, and transaction types, this page helps identify behavioral patterns and usage trends within the fintech platform.
-
-![](images/clipboard-2791231218.png)
-
-#### Customer Lifetime Value Selection
-
-Users can select a Customer Lifetime Value (CLV) segment from the dropdown menu. This filter allows users to analyze how transaction behavior differs across customer value tiers. For example, higher-value customers may show higher transaction frequency or larger transaction amounts.
-
-#### Month Selection
-
-Users can select the month or time period of transactions to focus on specific periods of activity.
-
-#### Transaction Type Selection
-
-Users can filter the data based on type of transaction, such as:
-
--   Transfer
-
--   Payment
-
--   Withdrawal
-
--   Deposit
-
-This feature helps users understand which types of financial activities are most common among customers.
-
-The results are displayed using two line graphs in one plot which are transaction count line and transaction amount line. These will helps identify transaction frequency trends.
-
-### 5.2.3 Churn analysis tab
-
-The objective of this page is to allow users to confirm statistically significant relationships between customer attributes and churn risk. Instead of only visual exploration, this page also enables hypothesis testing.
-
-![](images/clipboard-715139934.png)
-
-#### Y Variable Selection
-
-Users can choose a categorical variable for the Y-axis to analyze relationships with churn groups.
-
-Examples include:
-
--   Active products
-
--   Customer segments
-
--   Income level
-
--   Education level
-
-#### Display Type Selection
-
-Users can choose how the results are displayed whether they want to see data in count or percentage value. This helps users interpret the results based on absolute numbers or proportions.
-
-#### Statistical Test Selection
-
-Users can choose the statistical test type which are parametric teat or non-parametric test which determines the significance threshold used in the hypothesis test.
-
-The results are displayed using stacked bar charts, showing the distribution of variables across churn probability groups.
-
-## 5.3 Cluster Analysis tab
-
-The Cluster Analysis tab allows users to explore customer segmentation using clustering techniques. The objective of this page is to identify groups of customers with similar characteristics or behaviors. By understanding these segments, businesses can develop more targeted marketing strategies and improve customer engagement.
-
-![](images/clipboard-3485063717.png)
-
-#### Number of Clusters Selection
-
-Users can select the number of clusters (k) from a slide bar. This feature allows users to experiment with different segmentation levels.
-
-The clustering results are displayed using a scatter plot visualization, where each point represents a customer and colors represent different clusters.
-
-## 5.4 Decision tree tab
-
-The Decision tree tab is designed to identify the key factors that influence customer churn probability. This page uses a decision tree model to analyze relationships between customer attributes and churn risk.
-
-![](images/clipboard-1868013280.png)
-
-The main output of this page is a decision tree diagram that illustrates how customers are classified into different churn probability groups based on their characteristics.
-
-Each branch of the tree represents a decision rule based on a specific variable, while each node represents a split in the data that separates customers into different groups.
-
-This visualization helps users easily interpret how different customer attributes influence churn risk.
-
-# 6. Reference
+# 5. Reference
 
 <https://www.sciencedirect.com/science/article/pii/S2352340926000375>
 

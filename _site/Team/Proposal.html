@@ -155,8 +155,14 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation">Motivation</a></li>
   <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives">Objectives</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
-  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
-  <li><a href="#prototype-sketches" id="toc-prototype-sketches" class="nav-link" data-scroll-target="#prototype-sketches">Prototype Sketches</a></li>
+  <li><a href="#methodology-and-analytical-approach" id="toc-methodology-and-analytical-approach" class="nav-link" data-scroll-target="#methodology-and-analytical-approach">Methodology and Analytical Approach</a>
+  <ul class="collapse">
+  <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">1. Exploratory Data Analysis (EDA)</a></li>
+  <li><a href="#confirmatory-data-analysis-cda" id="toc-confirmatory-data-analysis-cda" class="nav-link" data-scroll-target="#confirmatory-data-analysis-cda">2. Confirmatory Data Analysis (CDA)</a></li>
+  <li><a href="#cluster-analysis" id="toc-cluster-analysis" class="nav-link" data-scroll-target="#cluster-analysis">3. Cluster Analysis</a></li>
+  <li><a href="#predictive-modelling" id="toc-predictive-modelling" class="nav-link" data-scroll-target="#predictive-modelling">4. Predictive Modelling</a></li>
+  </ul></li>
+  <li><a href="#data-visualization-method" id="toc-data-visualization-method" class="nav-link" data-scroll-target="#data-visualization-method">Data Visualization Method</a></li>
   <li><a href="#r-packages" id="toc-r-packages" class="nav-link" data-scroll-target="#r-packages">R Packages</a></li>
   <li><a href="#project-schedule" id="toc-project-schedule" class="nav-link" data-scroll-target="#project-schedule">Project Schedule</a></li>
   </ul>
@@ -184,26 +190,182 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="motivation" class="level1">
-<h1>Motivation</h1>
+<section id="motivation" class="level2">
+<h2 class="anchored" data-anchor-id="motivation">Motivation</h2>
+<p>In the highly competitive financial services industry, customer churn has become a critical issue for financial institutions. As the number of alternative financial products and service providers continues to grow, customers face lower switching barriers and more choices in the market. If firms are unable to identify churn risk in a timely manner, they may experience revenue loss and an unstable customer base. Therefore, understanding which factors influence customer churn and which customer groups are more likely to leave is of strong practical importance.</p>
+<p>However, identifying churn-related factors alone is not sufficient. From a business perspective, it is even more important to predict high-risk customers in advance and implement suitable retention strategies for different customer segments. For this reason, this study not only aims to explore the key drivers of customer churn, but also seeks to build predictive models that can support early intervention and more targeted customer retention actions.</p>
+<p>Through this study, we hope not only to better understand the underlying patterns of customer churn, but also to translate analytical findings into actionable business insights that help financial institutions improve customer retention and overall business performance in a competitive market.</p>
 </section>
-<section id="objectives" class="level1">
-<h1>Objectives</h1>
+<section id="objectives" class="level2">
+<h2 class="anchored" data-anchor-id="objectives">Objectives</h2>
+<p>This project aims to build an interactive visual analytics prototype to support the analysis of customer behavior and churn in a Latin American fintech platform. The prototype focuses on the following objectives:</p>
+<ol type="1">
+<li><p>Customer overview and exploration: Visualize customer demographics, engagement patterns, transaction activities, and geographical distribution to provide a high-level understanding of the customer base.</p></li>
+<li><p>Churn-related factor analysis: Explore and statistically validate the relationships between customer attributes and churn groups to identify factors associated with churn risk.</p></li>
+<li><p>Transaction behavior analysis: Examine transaction count and transaction amount across time periods, customer value segments, and transaction types to uncover usage trends and behavioral differences.</p></li>
+<li><p>Customer segmentation: Group customers into distinct clusters based on behavioral, transactional, and retention-related features to reveal meaningful customer profiles.</p></li>
+<li><p>Predictive modeling: Develop Decision Tree and Random Forest models to estimate churn probability, evaluate model performance, and identify key predictors of churn.</p></li>
+<li><p>Interactive decision-support interface: Provide a user-friendly dashboard that enables users to adjust analysis settings, explore visual outputs, and generate scenario-based predictions. ## Data</p></li>
+</ol>
 </section>
-<section id="data" class="level1">
-<h1>Data</h1>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>This project uses data from the paper <a href="https://www.sciencedirect.com/science/article/pii/S2352340926000375"><em>A Comprehensive Dataset of Customer Behavior in Latin American Fintech: 12-Month Transactional and Demographic Data for Churn Analysis</em>.</a> The dataset contains customer-level and transaction-level information from a Colombian fintech company over a 12-month period in 2023. It provides a comprehensive view of customer demographics, product usage, transaction activities, customer feedback, digital engagement, and churn-related measures.</p>
+<p>The data are organised into two relational CSV files. The first file, <code>customer_data.csv</code>, contains one row per customer and includes demographic information, product portfolio, satisfaction indicators, engagement metrics, and derived customer-level measures. This file consists of 48,723 customer records. The second file, <code>transactions_data.csv</code>, contains one row per transaction and records detailed transaction activities for the same customer base, with a total of 3,159,157 transaction records.</p>
+<p>Together, these two files support multiple types of analysis in the project, including exploratory analysis, confirmatory analysis, customer segmentation, and predictive modelling. Since different analytical modules require different variable selections, transformations, and levels of aggregation, data preparation will be conducted separately within each analytical framework.</p>
 </section>
-<section id="methodology" class="level1">
-<h1>Methodology</h1>
+<section id="methodology-and-analytical-approach" class="level2">
+<h2 class="anchored" data-anchor-id="methodology-and-analytical-approach">Methodology and Analytical Approach</h2>
+<p>This project adopts a combination of Exploratory Data Analysis (EDA), Confirmatory Data Analysis (CDA), Cluster Analysis, and Predictive Modelling to investigate customer behavior and churn patterns in a Latin American fintech platform. Before conducting the analyses, the datasets will be cleaned, transformed, and prepared according to the requirements of each analytical module.</p>
+<section id="exploratory-data-analysis-eda" class="level3">
+<h3 class="anchored" data-anchor-id="exploratory-data-analysis-eda">1. Exploratory Data Analysis (EDA)</h3>
+<p>EDA will be used to provide an overview of customer profiles, transaction patterns, digital engagement, customer experience, and geographical distribution. Through descriptive statistics and visualizations, this module helps users identify trends, distributions, and possible relationships among key variables.</p>
 </section>
-<section id="prototype-sketches" class="level1">
-<h1>Prototype Sketches</h1>
+<section id="confirmatory-data-analysis-cda" class="level3">
+<h3 class="anchored" data-anchor-id="confirmatory-data-analysis-cda">2. Confirmatory Data Analysis (CDA)</h3>
+<p>CDA will be conducted to statistically examine the relationships between churn groups and selected customer attributes. By applying parametric and non-parametric methods, this module allows users to assess whether the observed differences are statistically significant and to validate churn-related patterns identified in the exploratory stage.</p>
 </section>
-<section id="r-packages" class="level1">
-<h1>R Packages</h1>
+<section id="cluster-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="cluster-analysis">3. Cluster Analysis</h3>
+<p>Cluster analysis will be applied to identify meaningful customer segments based on behavioral, transactional, and retention-related variables. After transforming and standardizing the selected features, clustering techniques will be used to group customers into distinct segments. The resulting clusters will be interpreted through cluster maps, profile comparisons, and summary tables.</p>
 </section>
-<section id="project-schedule" class="level1">
-<h1>Project Schedule</h1>
+<section id="predictive-modelling" class="level3">
+<h3 class="anchored" data-anchor-id="predictive-modelling">4. Predictive Modelling</h3>
+<p>Predictive modelling will be used to estimate customer churn probability. In this project, both a Decision Tree regression model and a Random Forest regression model will be developed. Their performance will be evaluated using RMSE, MAE, and R-squared, while visual outputs such as predicted-versus-actual plots and feature importance charts will help users interpret the modelling results.</p>
+</section>
+</section>
+<section id="data-visualization-method" class="level2">
+<h2 class="anchored" data-anchor-id="data-visualization-method">Data Visualization Method</h2>
+<p>Detailed information is provided in the <strong>prototype pages</strong> of each analytical method. A brief summary is presented below.</p>
+<p><a href="../Prototype/EDA_CDA.html"><strong>EDA &amp; CDA:</strong></a> Uses bar charts, line charts, scatter plots, boxplots, heatmaps, correlation plots, and choropleth maps to present customer profiles, transaction patterns, engagement behavior, customer experience, and the relationships between selected variables and churn groups.</p>
+<p><a href="../Prototype/Cluster.html"><strong>Cluster Analysis:</strong></a> Uses elbow plots and silhouette plots to assess the number of clusters, a PCA cluster map to show cluster separation, and heatmaps and summary tables to present the characteristics of each customer segment.</p>
+<p><a href="../Prototype/Predict_Model.html"><strong>Predictive Modelling:</strong></a> Uses a decision tree diagram to show the model structure, predicted-versus-actual plots to evaluate model performance, and feature importance charts to highlight the most influential predictors. Model performance is summarised using RMSE, MAE, and R-squared.</p>
+</section>
+<section id="r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="r-packages">R Packages</h2>
+<p>The R packages used in this project include:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Package</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>pacman</code></td>
+<td>For managing package installation and loading.</td>
+</tr>
+<tr class="even">
+<td><code>tidyverse</code></td>
+<td>For data wrangling and visualisation.</td>
+</tr>
+<tr class="odd">
+<td><code>dplyr</code></td>
+<td>For data transformation and summarisation.</td>
+</tr>
+<tr class="even">
+<td><code>tidyr</code></td>
+<td>For reshaping and tidying datasets.</td>
+</tr>
+<tr class="odd">
+<td><code>ggplot2</code></td>
+<td>For creating visualisations and statistical graphics.</td>
+</tr>
+<tr class="even">
+<td><code>readr</code></td>
+<td>For importing CSV data files.</td>
+</tr>
+<tr class="odd">
+<td><code>readxl</code></td>
+<td>For reading Excel files when required.</td>
+</tr>
+<tr class="even">
+<td><code>lubridate</code></td>
+<td>For processing and transforming date variables.</td>
+</tr>
+<tr class="odd">
+<td><code>scales</code></td>
+<td>For formatting plot labels, axes, and percentages.</td>
+</tr>
+<tr class="even">
+<td><code>ggstatsplot</code></td>
+<td>For generating statistical plots with hypothesis testing results.</td>
+</tr>
+<tr class="odd">
+<td><code>patchwork</code></td>
+<td>For combining multiple plots into a single layout.</td>
+</tr>
+<tr class="even">
+<td><code>corrplot</code></td>
+<td>For visualising correlation matrices.</td>
+</tr>
+<tr class="odd">
+<td><code>sf</code></td>
+<td>For handling geospatial data.</td>
+</tr>
+<tr class="even">
+<td><code>tmap</code></td>
+<td>For producing thematic maps.</td>
+</tr>
+<tr class="odd">
+<td><code>stringi</code></td>
+<td>For text cleaning and string manipulation.</td>
+</tr>
+<tr class="even">
+<td><code>factoextra</code></td>
+<td>For cluster analysis visualisation and diagnostics.</td>
+</tr>
+<tr class="odd">
+<td><code>plotly</code></td>
+<td>For interactive visualisations.</td>
+</tr>
+<tr class="even">
+<td><code>cluster</code></td>
+<td>For clustering techniques and diagnostics.</td>
+</tr>
+<tr class="odd">
+<td><code>DT</code></td>
+<td>For interactive tabular display.</td>
+</tr>
+<tr class="even">
+<td><code>shiny</code></td>
+<td>For building the interactive prototype dashboard.</td>
+</tr>
+<tr class="odd">
+<td><code>rpart</code></td>
+<td>For Decision Tree modelling.</td>
+</tr>
+<tr class="even">
+<td><code>rpart.plot</code></td>
+<td>For Decision Tree visualisation.</td>
+</tr>
+<tr class="odd">
+<td><code>sparkline</code></td>
+<td>For small-scale inline charts in dashboards and tables.</td>
+</tr>
+<tr class="even">
+<td><code>visNetwork</code></td>
+<td>For interactive visualisation of tree or network structures.</td>
+</tr>
+<tr class="odd">
+<td><code>caret</code></td>
+<td>For model training and evaluation workflows.</td>
+</tr>
+<tr class="even">
+<td><code>ranger</code></td>
+<td>For Random Forest modelling.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="project-schedule" class="level2">
+<h2 class="anchored" data-anchor-id="project-schedule">Project Schedule</h2>
+<p>The following project timeline is planned backward from the poster submission deadline to ensure adequate time for development, refinement, and final presentation preparation.</p>
 <p><img src="images/clipboard-3582234841.png" class="img-fluid"></p>
 
 

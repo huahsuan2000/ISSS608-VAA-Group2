@@ -218,7 +218,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#cluster-summary-table" id="toc-cluster-summary-table" class="nav-link" data-scroll-target="#cluster-summary-table">Cluster summary table</a></li>
   <li><a href="#cluster-profile-heatmap" id="toc-cluster-profile-heatmap" class="nav-link" data-scroll-target="#cluster-profile-heatmap">Cluster profile heatmap</a></li>
   </ul></li>
-  <li><a href="#ui-design" id="toc-ui-design" class="nav-link" data-scroll-target="#ui-design">UI design</a></li>
   </ul>
 </nav>
     </div>
@@ -485,17 +484,9 @@ date  (5): first_tx, last_tx, last_survey_date, last_transaction_date, first...
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="ui-design" class="level1">
-<h1>UI design</h1>
-<p>The proposed user interface is designed to support interactive exploration of customer clusters in a simple and structured manner. Since the purpose of the prototype is to demonstrate the feasibility of the cluster analysis module for the future Shiny application, the interface focuses on allowing users to control the clustering settings and inspect the resulting customer segments through multiple coordinated outputs.</p>
-<p>The layout is organised into two main areas: a sidebar panel for input controls and a main panel for analytical outputs. The sidebar panel is intended to contain the key parameters that influence the clustering process. These include the selection of feature groups, the number of clusters, and the option to include or exclude retention-related indicators such as churn probability and satisfaction measures. This arrangement allows users to experiment with different clustering configurations without overwhelming the main analytical space.</p>
-<p>The main panel is designed to present the clustering results in a clear and progressive sequence. The first output section shows the cluster selection diagnostics, such as the elbow plot and silhouette plot, so that users can evaluate different cluster solutions. The second section displays a cluster map based on principal component analysis, which helps users visually assess the separation between clusters. The third section presents a cluster profile comparison, such as a heatmap or grouped summary chart, to highlight the behavioural and transactional characteristics of each cluster. The final section contains a summary table that reports the size and key statistics of each cluster for detailed inspection.</p>
-<p>Several Shiny UI components are appropriate for this module. A <code>checkboxGroupInput()</code> can be used to allow users to select one or more feature groups for clustering, such as engagement, transaction behaviour, and experience or retention variables. A <code>sliderInput()</code> is suitable for specifying the number of clusters because it provides an intuitive way to test different values of kkk. A <code>checkboxInput()</code> can be used to control whether retention-related variables are included in the clustering process. For the outputs, <code>plotOutput()</code> or <code>plotlyOutput()</code> can be used for the diagnostic plots and cluster map, while <code>DTOutput()</code> is suitable for presenting the cluster summary table in an interactive and readable format.</p>
-<p>This UI design is intended to balance flexibility and interpretability. The controls are limited to a small number of meaningful parameters so that users can focus on analytical exploration rather than technical complexity. At the same time, the combination of diagnostic plots, cluster visualisation, profile comparison, and tabular summaries ensures that the clustering results can be interpreted from multiple perspectives. Overall, the proposed design is suitable for integration into the future group Shiny application as a dedicated customer segmentation module.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

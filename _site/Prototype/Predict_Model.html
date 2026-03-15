@@ -217,7 +217,10 @@ window.Quarto = {
  <span class="menu-text">Team</span>
     </a>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-team">    
-        <li class="dropdown-header">Project Proposal</li>
+        <li>
+    <a class="dropdown-item" href="../Team/Proposal.html">
+ <span class="dropdown-text">Project Proposal</span></a>
+  </li>  
         <li>
     <a class="dropdown-item" href="../Team/minutes_of_meeting.html">
  <span class="dropdown-text">Minutes of Meeting</span></a>
@@ -268,13 +271,6 @@ window.Quarto = {
   <li><a href="#predicted-vs-actual-on-test-data-1" id="toc-predicted-vs-actual-on-test-data-1" class="nav-link" data-scroll-target="#predicted-vs-actual-on-test-data-1">Predicted vs Actual on Test Data</a></li>
   <li><a href="#feature-importance-of-random-forest" id="toc-feature-importance-of-random-forest" class="nav-link" data-scroll-target="#feature-importance-of-random-forest">Feature Importance of Random Forest</a></li>
   <li><a href="#model-performance-metrics-1" id="toc-model-performance-metrics-1" class="nav-link" data-scroll-target="#model-performance-metrics-1">Model Performance Metrics</a></li>
-  </ul></li>
-  <li><a href="#ui-design-introduction" id="toc-ui-design-introduction" class="nav-link" data-scroll-target="#ui-design-introduction">UI Design Introduction</a>
-  <ul class="collapse">
-  <li><a href="#control-panel" id="toc-control-panel" class="nav-link" data-scroll-target="#control-panel">Control Panel</a></li>
-  <li><a href="#model-performance" id="toc-model-performance" class="nav-link" data-scroll-target="#model-performance">Model Performance</a></li>
-  <li><a href="#model-visualization" id="toc-model-visualization" class="nav-link" data-scroll-target="#model-visualization">Model Visualization</a></li>
-  <li><a href="#scenario-prediction" id="toc-scenario-prediction" class="nav-link" data-scroll-target="#scenario-prediction">Scenario Prediction</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -849,55 +845,6 @@ $ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 3597810
 3 R-squared 0.909 </code></pre>
 </div>
 </div>
-</section>
-</section>
-<section id="ui-design-introduction" class="level1">
-<h1>UI Design Introduction</h1>
-<p>This Predict Model Shiny app enables users to construct either a Decision Tree or a Random Forest model by selecting input variables and tuning key hyperparameters. Users can adjust the train/test split ratio for both models, as well as model-specific parameters such as minimum split, maximum depth, and complexity parameter (for Decision Tree), or the number of trees (for Random Forest).</p>
-<p>Upon model completion, the app provides comprehensive performance metrics, including RMSE, MAE, and R-squared. It also features interactive visualizations: the Decision Tree structure (exclusive to the tree model), the distribution of predicted vs.&nbsp;actual values, and feature importance (available for both). To enhance practical utility, a “Scenario Prediction” section is integrated, allowing users to input specific values and obtain real-time predictions based on the active model.</p>
-<p><img src="images/clipboard-4178123747.png" class="img-fluid"></p>
-<section id="control-panel" class="level2">
-<h2 class="anchored" data-anchor-id="control-panel">Control Panel</h2>
-<p>The Left Control Panel allows users to adjust key model settings, including variable selection and the train/test split ratio for both models. Additionally, users can modify model-specific parameters: minimum split, maximum depth, and complexity parameter (for Decision Tree), or the number of trees (for Random Forest). It also includes parameter definitions to help users better understand the technical meaning and impact of each setting.</p>
-<ul>
-<li><p>Decision Tree</p>
-<p><img src="images/clipboard-564498122.png" class="img-fluid"></p></li>
-</ul>
-<!-- -->
-<ul>
-<li><p>Random Forest</p>
-<p><img src="images/clipboard-3703075994.png" class="img-fluid"></p></li>
-</ul>
-</section>
-<section id="model-performance" class="level2">
-<h2 class="anchored" data-anchor-id="model-performance">Model Performance</h2>
-<p>This section summarizes how well the decision tree performs on the test dataset. After clicking “Build Model,” the app automatically calculates RMSE, MAE, and R-squared to evaluate prediction accuracy and overall model fit.</p>
-<ul>
-<li><p>Decision Tree</p>
-<p><img src="images/clipboard-1589619322.png" class="img-fluid"></p></li>
-<li><p>Random Forest</p>
-<p><img src="images/clipboard-1637959753.png" class="img-fluid"></p></li>
-</ul>
-</section>
-<section id="model-visualization" class="level2">
-<h2 class="anchored" data-anchor-id="model-visualization">Model Visualization</h2>
-<p>Displays the main visual outputs of the trained model, including the tree structure (for Decision Tree), predicted vs actual results on the test dataset, and the top 10 most important variables. This section helps users interpret model behavior and evaluate prediction performance.</p>
-<ul>
-<li><p>Decision Tree</p>
-<p><img src="images/clipboard-501234892.png" class="img-fluid"></p></li>
-<li><p>Random Forest</p>
-<p><img src="images/clipboard-3394370475.png" class="img-fluid"></p></li>
-</ul>
-</section>
-<section id="scenario-prediction" class="level2">
-<h2 class="anchored" data-anchor-id="scenario-prediction">Scenario Prediction</h2>
-<p>Allows users to test a custom scenario by entering values for the variables used in the current model. The app then generates the predicted churn probability and displays the corresponding terminal node and decision path.</p>
-<ul>
-<li><p>Decision Tree</p>
-<p><img src="images/clipboard-2134408216.png" class="img-fluid"></p></li>
-<li><p>Random Forest</p>
-<p><img src="images/clipboard-3603814979.png" class="img-fluid"></p></li>
-</ul>
 
 
 </section>

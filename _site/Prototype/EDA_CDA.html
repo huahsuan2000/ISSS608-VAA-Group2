@@ -8,7 +8,7 @@
 
 <meta name="author" content="Walaiporn Pawitranon">
 
-<title>EDA &amp; CDA – ISSS608-Y25-26-Group2</title>
+<title>Exploratory Data Analysis &amp; Confirmatory Data Analysis – ISSS608-Y25-26-Group2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -235,19 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#churn_probability-vs-customer-lifetime-value" id="toc-churn_probability-vs-customer-lifetime-value" class="nav-link" data-scroll-target="#churn_probability-vs-customer-lifetime-value">4.11 Churn_probability VS Customer lifetime value</a></li>
   <li><a href="#churn_probability-vs-average-login-frequency" id="toc-churn_probability-vs-average-login-frequency" class="nav-link" data-scroll-target="#churn_probability-vs-average-login-frequency">4.12 Churn_probability VS Average login frequency</a></li>
   </ul></li>
-  <li><a href="#storyboard---ui-design" id="toc-storyboard---ui-design" class="nav-link" data-scroll-target="#storyboard---ui-design">5. Storyboard - UI Design</a>
-  <ul class="collapse">
-  <li><a href="#summary-tab" id="toc-summary-tab" class="nav-link" data-scroll-target="#summary-tab">5.1 Summary tab</a></li>
-  <li><a href="#exploration-tab" id="toc-exploration-tab" class="nav-link" data-scroll-target="#exploration-tab">5.2 Exploration tab</a>
-  <ul class="collapse">
-  <li><a href="#customer-overview-tab" id="toc-customer-overview-tab" class="nav-link" data-scroll-target="#customer-overview-tab">5.2.1 Customer overview tab</a></li>
-  <li><a href="#transaction-behavior-tab" id="toc-transaction-behavior-tab" class="nav-link" data-scroll-target="#transaction-behavior-tab">5.2.2 Transaction behavior tab</a></li>
-  <li><a href="#churn-analysis-tab" id="toc-churn-analysis-tab" class="nav-link" data-scroll-target="#churn-analysis-tab">5.2.3 Churn analysis tab</a></li>
-  </ul></li>
-  <li><a href="#cluster-analysis-tab" id="toc-cluster-analysis-tab" class="nav-link" data-scroll-target="#cluster-analysis-tab">5.3 Cluster Analysis tab</a></li>
-  <li><a href="#decision-tree-tab" id="toc-decision-tree-tab" class="nav-link" data-scroll-target="#decision-tree-tab">5.4 Decision tree tab</a></li>
-  </ul></li>
-  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">6. Reference</a></li>
+  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">5. Reference</a></li>
   </ul>
 </nav>
     </div>
@@ -256,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">EDA &amp; CDA</h1>
+<h1 class="title">Exploratory Data Analysis &amp; Confirmatory Data Analysis</h1>
 </div>
 
 
@@ -313,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The project uses <code>p_load()</code> of pacman package to check if the R packages are installed in the computer.</p>
 <p>The following code chunk is used to install and launch the R packages.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(dplyr,tidyr,ggplot2,readxl,scales,ggstatsplot,patchwork,lubridate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(dplyr,tidyr,ggplot2,readxl,scales,ggstatsplot,patchwork,lubridate, readr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="import-data" class="level2">
@@ -966,7 +954,8 @@ international_transactions        failed_transactions
 <section id="digital-engagement-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="digital-engagement-analysis">3.4 Digital Engagement Analysis</h2>
 <p>The Digital Engagement dashboard was developed using <code>ggplot2</code> to summarize user activity, engagement behavior, and retention-related metrics.</p>
-<p>First, key engagement KPIs were calculated, including total users (<code>nrow()</code>), average app login frequency, average monthly transaction count, average churn probability (formatted as percentage), and average Net Promoter Score (NPS). These metrics provide a high-level overview of platform engagement and customer sentiment.</p>
+<p>The key engagement KPIs were calculated, including total users (<code>nrow()</code>), average app login frequency, average monthly transaction count, and average churn probability (formatted as percentage). These metrics provide a high-level overview of platform engagement and customer sentiment.</p>
+<p>Several visualizations are used to explore relationships in the data. <code>geom_point()</code> creates scatter plots to examine the relationships between app login frequency and churn probability, and between monthly transaction count and total transaction volume, while a regression line <code>(geom_smooth(method = "lm"))</code> highlights the overall trend between engagement and churn risk. In addition, <code>geom_boxplot()</code> is used to show the distribution of feature usage diversity across different satisfaction score levels.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -977,35 +966,35 @@ international_transactions        failed_transactions
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>kpi_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">1</span>, <span class="at">y=</span><span class="dv">5</span>, <span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Total Users:"</span>, total_users), <span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">1</span>, <span class="at">y=</span><span class="dv">4</span>, <span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Avg Logins:"</span>, avg_logins), <span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">1</span>, <span class="at">y=</span><span class="dv">3</span>, <span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Avg Monthly Tx:"</span>, avg_tx_freq), <span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">1</span>, <span class="at">y=</span><span class="dv">3</span>, <span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Avg Monthly Transaction:"</span>, avg_tx_freq), <span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>,<span class="dv">2</span>) <span class="sc">+</span> <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>login_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer, <span class="fu">aes</span>(<span class="at">x =</span> app_logins_frequency)) <span class="sc">+</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"App Login Frequency Distribution"</span>,</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Login Frequency"</span>,</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Users"</span>)</span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>feature_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer, <span class="fu">aes</span>(<span class="at">x =</span> feature_usage_diversity)) <span class="sc">+</span></span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins=</span><span class="dv">10</span>) <span class="sc">+</span></span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Feature Usage Diversity"</span>,</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Number of Features Used"</span>,</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Users"</span>)</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>transaction_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer,</span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> monthly_transaction_count,</span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> total_transaction_volume)) <span class="sc">+</span></span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Transaction Frequency vs Volume"</span>,</span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Monthly Transaction Count"</span>,</span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Total Transaction Volume"</span>)</span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>kpi_plot <span class="sc">/</span>(login_plot <span class="sc">|</span> feature_plot) <span class="sc">/</span> transaction_plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>login_churn_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer, <span class="fu">aes</span>(<span class="at">x =</span> app_logins_frequency, <span class="at">y =</span> churn_probability)) <span class="sc">+</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"#2C7FB8"</span>) <span class="sc">+</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Relationship Between App Login Frequency and Churn"</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>feature_sat_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer, <span class="fu">aes</span>(<span class="at">x =</span> satisfaction_score, <span class="at">y =</span> feature_usage_diversity))<span class="sc">+</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Distribution of Feature Usage by Satiafaction Score"</span>)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>transaction_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer,</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> monthly_transaction_count,</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> total_transaction_volume)) <span class="sc">+</span></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Transaction Frequency vs Volume"</span>,</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Monthly Transaction Count"</span>,</span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Total Transaction Volume"</span>)</span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>kpi_plot <span class="sc">/</span>(login_churn_plot <span class="sc">|</span> feature_sat_plot) <span class="sc">/</span> transaction_plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1025,56 +1014,79 @@ international_transactions        failed_transactions
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>Most users log in between moderate ranges, while a smaller portion shows very high login frequency.</p></li>
-<li><p>Most users utilize only a limited number of features, with fewer customers exploring a wide range of functionalities.</p></li>
-<li><p>The relationship between login frequency and satisfaction appears relatively weak, as indicated by the nearly flat regression line.</p></li>
-<li><p>There is a visible concentration of customers with moderate churn probability and varying CLV levels.</p></li>
-<li><p>The scatter plot shows a positive relationship between transaction count and total transaction volume.</p></li>
+<li><p>The relationship between app login frequency and churn probability shows a negative trend. Customers who log into the app more frequently tend to have lower churn probability, suggesting that higher engagement is associated with better customer retention.</p></li>
+<li><p>The feature usage diversity increases with higher satisfaction levels. Customers with very high satisfaction scores tend to use more app features, as shown by the higher median and wider distribution in the boxplot.</p></li>
+<li><p>The Transaction Frequency vs Volume plot shows a positive relationship between transaction count and total transaction volume.</p></li>
 </ul>
-<p>The Digital Engagement analysis reveals that while customer activity levels are moderate, overall satisfaction and loyalty indicators remain weak. Engagement quantity alone does not guarantee satisfaction, suggesting that improving service quality and user experience may be more impactful than simply increasing login frequency.</p>
 </div>
 </div>
 </section>
 <section id="customer-experience" class="level2">
 <h2 class="anchored" data-anchor-id="customer-experience">3.5 Customer Experience</h2>
-<p>In this section, we explore customer experience by examining key metrics and relationships between engagement, satisfaction, and churn. The average churn probability provide a high-level view of overall customer experience. <code>geom_point()</code> are used to visualize how app login frequency relates to satisfaction and how churn probability relates to customer lifetime value (CLV).</p>
+<p>In this section, customer experience is analyzed by examining key metrics and relationships between engagement, satisfaction, feedback, and churn. The average churn probability provides a high-level overview of overall customer retention risk. Several visualizations are used to explore these relationships: <code>geom_boxplot()</code> illustrates how satisfaction relates to app login frequency and churn probability, <code>geom_point()</code> shows the relationship between churn probability and customer lifetime value (CLV), and <code>geom_tile()</code> visualizes the relationship between feedback sentiment and satisfaction score. Together, these visualizations help identify patterns in customer behavior and highlight factors associated with customer experience and churn risk.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>avg_churn <span class="ot">&lt;-</span> <span class="fu">percent</span>(<span class="fu">mean</span>(customer<span class="sc">$</span>churn_probability, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>kpi_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">1</span>, <span class="at">y=</span><span class="dv">2</span>, <span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Avg Churn Probability:"</span>, avg_churn), <span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>engagement_satisfaction_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> app_logins_frequency,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> satisfaction_score)) <span class="sc">+</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Engagement vs Satisfaction"</span>,</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"App Login Frequency"</span>,</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Satisfaction Score"</span>)</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>churn_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer,</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> churn_probability,</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> customer_lifetime_value)) <span class="sc">+</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Churn Probability vs CLV"</span>,</span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Churn Probability"</span>,</span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Customer Lifetime Value"</span>)</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>kpi_plot <span class="sc">/</span>(engagement_satisfaction_plot <span class="sc">|</span> churn_plot) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>avg_churn <span class="ot">&lt;-</span> <span class="fu">percent</span>(<span class="fu">mean</span>(customer<span class="sc">$</span>churn_probability, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>kpi_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x=</span><span class="dv">1</span>, <span class="at">y=</span><span class="dv">2</span>, <span class="at">label=</span><span class="fu">paste</span>(<span class="st">"Avg Churn Probability:"</span>, avg_churn), <span class="at">size=</span><span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>engagement_satisfaction_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span>satisfaction_score,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> app_logins_frequency)) <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Satisfaction VS Engagement"</span>,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Satisfaction Score"</span>,</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"App Login Frequency"</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>churn_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer,</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> churn_probability,</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> customer_lifetime_value)) <span class="sc">+</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Churn Probability vs CLV"</span>,</span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Churn Probability"</span>,</span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Customer Lifetime Value"</span>)</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="st">"feedback_sentiment"</span></span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="st">"satisfaction_score"</span></span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> customer <span class="sc">%&gt;%</span></span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(.data[[x]], .data[[y]])</span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>feedback_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df,</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>            <span class="fu">aes_string</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> <span class="st">"n"</span>)) <span class="sc">+</span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"white"</span>, <span class="at">high =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Feedback Sentiment VS Satisfaction Score"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
+ℹ Please use tidy evaluation idioms with `aes()`.
+ℹ See also `vignette("ggplot2-in-packages")` for more information.</code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>satisfaction_churn_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(customer,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> satisfaction_score,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> churn_probability)) <span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Satisfaction VS Churn Probability"</span>,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Satisfaction Score"</span>,</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Churn Probability"</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>kpi_plot <span class="sc">/</span>(engagement_satisfaction_plot <span class="sc">+</span> churn_plot)<span class="sc">/</span> ( feedback_plot <span class="sc">+</span> satisfaction_churn_plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="EDA_CDA_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="EDA_CDA_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1092,11 +1104,9 @@ international_transactions        failed_transactions
 <ul>
 <li><p>The average churn probability across all customers is 34%, indicating a significant portion of the customer base is at risk of leaving.</p></li>
 <li><p>Customer engagement, measured by app login frequency, is positively associated with satisfaction: more frequent logins tend to correspond with higher satisfaction scores.</p></li>
-</ul>
-<!-- -->
-<ul>
 <li><p>The churn probability vs.&nbsp;CLV plot shows that most customers have moderate churn probability, but those with higher churn probability generally have lower customer lifetime value (CLV).</p></li>
-<li><p>These findings suggest that improving customer engagement and satisfaction may help reduce churn and protect overall customer value.</p></li>
+<li><p>The Feedback sentiment VS Satisfaction score shows that positive feedback related to higher satisfaction score.</p></li>
+<li><p>The Satisfaction VS Churn Probability shows that the higher satsfaction score result in lower churn probability.</p></li>
 </ul>
 </div>
 </div>
@@ -1105,14 +1115,14 @@ international_transactions        failed_transactions
 <h2 class="anchored" data-anchor-id="geographical-distribution-of-customers">3.6 Geographical Distribution of Customers</h2>
 <p>The code chunk below will be used to install and load package for handling geospatial data in RStudio</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tmap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, tmap)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="importing-geospatial-data-into-r" class="level3">
 <h3 class="anchored" data-anchor-id="importing-geospatial-data-into-r">3.6.1 Importing Geospatial Data into R</h3>
-<p>The code chunk below uses the st_read() function of sf package to import gadm41_COL_1 shapefile into R as a simple feature data frame</p>
+<p>The code chunk below uses the <code>st_read()</code> function of sf package to import gadm41_COL_1 shapefile into R as a simple feature data frame</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, </span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"gadm41_COL_1"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"gadm41_COL_1"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `gadm41_COL_1' from data source 
   `D:\huahsuan2000\ISSS608-VAA-Group2\Prototype\data\geospatial' 
@@ -1126,7 +1136,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <p>Examine the content of mpsz by using the code chunk below.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>mpsz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mpsz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Simple feature collection with 33 features and 11 fields
 Geometry type: MULTIPOLYGON
@@ -1176,25 +1186,25 @@ First 10 features:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>customer <span class="ot">&lt;-</span> customer <span class="sc">%&gt;%</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">department =</span> <span class="fu">stri_trim_both</span>(<span class="fu">stri_extract_first_regex</span>(location, <span class="st">"(?&lt;=, ).*"</span>)),</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">department_clean =</span> <span class="fu">stri_trans_general</span>(department, <span class="st">"Latin-ASCII"</span>)</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>dept_customer <span class="ot">&lt;-</span> customer <span class="sc">%&gt;%</span></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(department_clean) <span class="sc">%&gt;%</span></span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">no_customers =</span> <span class="fu">n</span>())</span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">NAME_1_clean =</span> <span class="fu">stri_trans_general</span>(NAME_1, <span class="st">"Latin-ASCII"</span>))</span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>mpsz_customers <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(dept_customer, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"NAME_1_clean"</span> <span class="ot">=</span> <span class="st">"department_clean"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stringi)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>customer <span class="ot">&lt;-</span> customer <span class="sc">%&gt;%</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">department =</span> <span class="fu">stri_trim_both</span>(<span class="fu">stri_extract_first_regex</span>(location, <span class="st">"(?&lt;=, ).*"</span>)),</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">department_clean =</span> <span class="fu">stri_trans_general</span>(department, <span class="st">"Latin-ASCII"</span>)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>dept_customer <span class="ot">&lt;-</span> customer <span class="sc">%&gt;%</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(department_clean) <span class="sc">%&gt;%</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">no_customers =</span> <span class="fu">n</span>())</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">NAME_1_clean =</span> <span class="fu">stri_trans_general</span>(NAME_1, <span class="st">"Latin-ASCII"</span>))</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>mpsz_customers <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(dept_customer, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"NAME_1_clean"</span> <span class="ot">=</span> <span class="st">"department_clean"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -1203,9 +1213,9 @@ First 10 features:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>ℹ tmap modes "plot" - "view"
@@ -1213,18 +1223,18 @@ First 10 features:
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_customers) <span class="sc">+</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"no_customers"</span>,</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">border.col =</span> <span class="st">"black"</span>,</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlOrRd"</span>,</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colorNA =</span> <span class="st">"gray90"</span>,</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of customers"</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Geographical Distribution of Customers"</span>,</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">frame =</span> <span class="cn">FALSE</span></span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(mpsz_customers) <span class="sc">+</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>(</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"no_customers"</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">border.col =</span> <span class="st">"black"</span>,</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"YlOrRd"</span>,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">colorNA =</span> <span class="st">"gray90"</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Number of customers"</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Geographical Distribution of Customers"</span>,</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">frame =</span> <span class="cn">FALSE</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>
@@ -1259,17 +1269,17 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>customer <span class="ot">&lt;-</span> customer <span class="sc">%&gt;%</span></span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">churn_group =</span> <span class="fu">cut</span>(</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>      churn_probability,</span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.4</span>),</span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Low"</span>,<span class="st">"Medium"</span>,<span class="st">"High"</span>),</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span></span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>customer <span class="ot">&lt;-</span> customer <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">churn_group =</span> <span class="fu">cut</span>(</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>      churn_probability,</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.2</span>,<span class="fl">0.3</span>,<span class="fl">0.4</span>),</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Low"</span>,<span class="st">"Medium"</span>,<span class="st">"High"</span>),</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">include.lowest =</span> <span class="cn">TRUE</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <section id="churn_probability-vs-gender" class="level2">
@@ -1277,10 +1287,10 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstatsplot)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, gender, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, gender, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>p1<span class="sc">/</span>p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggstatsplot)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, gender, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, gender, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>p1<span class="sc">/</span>p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1296,9 +1306,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, income_bracket, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, income_bracket, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>p3<span class="sc">/</span>p4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, income_bracket, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>p4 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, income_bracket, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>p3<span class="sc">/</span>p4</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1314,9 +1324,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, education_level, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, education_level, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>p5<span class="sc">/</span>p6</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p5 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, education_level, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>p6 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, education_level, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>p5<span class="sc">/</span>p6</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1332,9 +1342,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, marital_status, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>p8 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, marital_status, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>p7<span class="sc">/</span>p8</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>p7 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, marital_status, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>p8 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, marital_status, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>p7<span class="sc">/</span>p8</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1350,9 +1360,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p9 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, customer_segment, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>p10 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, customer_segment, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>p9<span class="sc">/</span>p10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>p9 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, customer_segment, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>p10 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, customer_segment, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>p9<span class="sc">/</span>p10</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1368,9 +1378,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>p11 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, savings_account, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>p12 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, savings_account, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>p11<span class="sc">/</span>p12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>p11 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, savings_account, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>p12 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, savings_account, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>p11<span class="sc">/</span>p12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1386,9 +1396,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>p13 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, acquisition_channel, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>p14 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, acquisition_channel, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>p13<span class="sc">/</span>p14</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>p13 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, acquisition_channel, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>p14 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, acquisition_channel, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>p13<span class="sc">/</span>p14</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1404,9 +1414,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>p15 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, active_products, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>p16 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, active_products, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>p15<span class="sc">/</span>p16</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>p15 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, active_products, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>p16 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, active_products, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>p15<span class="sc">/</span>p16</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1422,9 +1432,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>p17 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, satisfaction_score, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>p18 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, satisfaction_score, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>p17<span class="sc">/</span>p18</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>p17 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, satisfaction_score, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>p18 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, satisfaction_score, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>p17<span class="sc">/</span>p18</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1440,9 +1450,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>p19 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, feedback_sentiment, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>p20 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, feedback_sentiment, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>p19<span class="sc">/</span>p20</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>p19 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, feedback_sentiment, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>p20 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, feedback_sentiment, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>p19<span class="sc">/</span>p20</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1458,9 +1468,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>p21 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, clv_segment, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>p22 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, clv_segment, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>p21<span class="sc">/</span>p22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>p21 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, clv_segment, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>p22 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, clv_segment, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>p21<span class="sc">/</span>p22</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1476,9 +1486,9 @@ fit well, and are therefore rescaled.
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>p23 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, app_logins_group, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>p24 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, app_logins_group, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>p23<span class="sc">/</span>p24</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>p23 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, app_logins_group, churn_group, <span class="at">type=</span><span class="st">"parametric"</span>, <span class="at">title =</span> <span class="st">"Parametric"</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>p24 <span class="ot">&lt;-</span> <span class="fu">ggbarstats</span>(customer, app_logins_group, churn_group, <span class="at">type=</span><span class="st">"nonparametric"</span>,<span class="at">title =</span> <span class="st">"Non-parametric"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>p23<span class="sc">/</span>p24</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -1490,132 +1500,8 @@ fit well, and are therefore rescaled.
 </div>
 </section>
 </section>
-<section id="storyboard---ui-design" class="level1">
-<h1>5. Storyboard - UI Design</h1>
-<p>This dashboard is designed to help users explore customer behavior in a Latin American fintech platform. The storyboard structure guides users from a high-level overview to deeper analysis, including customer demographics, transaction patterns, customer segmentation, and churn analysis.</p>
-<p>The dashboard contains four main sections:</p>
-<ol type="1">
-<li><p>Summary</p></li>
-<li><p>Exploration</p></li>
-<li><p>Cluster Analysis</p></li>
-<li><p>Decision Tree Analysis</p></li>
-</ol>
-<p>Each page allows users to interact with the data through filters, visualizations, and statistical analysis.</p>
-<section id="summary-tab" class="level2">
-<h2 class="anchored" data-anchor-id="summary-tab">5.1 Summary tab</h2>
-<p>The Summary page provides a high-level overview of the customer dataset and key business metrics. It allows users to quickly understand the overall status of the customer base before exploring detailed analysis.</p>
-<p><img src="images/clipboard-1194473738.png" class="img-fluid"></p>
-<p>At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These KPIs help decision-makers quickly assess the overall performance of the fintech platform.</p>
-<p>Below the KPI section, several charts provide an overview of customer characteristics and behaviors. These visualizations provide a quick understanding of the customer base and highlight patterns that may require further investigation.</p>
-</section>
-<section id="exploration-tab" class="level2">
-<h2 class="anchored" data-anchor-id="exploration-tab">5.2 Exploration tab</h2>
-<p>The Exploration page allows users to perform Exploratory Data Analysis (EDA) by dynamically selecting variables and visualization types and the confirmatory Data Analysis page allows users to statistically validate relationships between variables. This page helps users explore relationships between different customer attributes.</p>
-<section id="customer-overview-tab" class="level3">
-<h3 class="anchored" data-anchor-id="customer-overview-tab">5.2.1 Customer overview tab</h3>
-<p>The main goal of this page is to allow users to interactively explore customer characteristics and distributions.</p>
-<p><img src="images/clipboard-893315867.png" class="img-fluid"></p>
-<p>At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These metrics provide quick insights into customer demographics and risk levels.</p>
-<section id="variable-selection" class="level4">
-<h4 class="anchored" data-anchor-id="variable-selection">Variable Selection</h4>
-<p>There are a filter bar that users can choose a categorical variable (X variable) from the dropdown menu to display in the visualization.</p>
-<p>Examples include:</p>
-<ul>
-<li><p>Gender</p></li>
-<li><p>Income bracket</p></li>
-<li><p>Education level</p></li>
-<li><p>Customer segment</p></li>
-<li><p>Acquisition channel</p></li>
-</ul>
-<p>This allows users to explore how different customer characteristics are distributed.</p>
-</section>
-<section id="plot-type-selection" class="level4">
-<h4 class="anchored" data-anchor-id="plot-type-selection">Plot Type Selection</h4>
-<p>Users can choose different visualization types such as bar chart, box plot, and other chart types</p>
-<p>This flexibility helps users view the data from different perspectives</p>
-</section>
-<section id="export-option" class="level4">
-<h4 class="anchored" data-anchor-id="export-option">Export Option</h4>
-<p>This allows users to easily share findings with stakeholders.</p>
-</section>
-<section id="geographic-distribution" class="level4">
-<h4 class="anchored" data-anchor-id="geographic-distribution">Geographic Distribution</h4>
-<p>A map visualization displays the geographical distribution of customers across regions, helping identify areas with higher customer concentration.</p>
-</section>
-</section>
-<section id="transaction-behavior-tab" class="level3">
-<h3 class="anchored" data-anchor-id="transaction-behavior-tab">5.2.2 Transaction behavior tab</h3>
-<p>The Transaction Behavior tab allows users to analyze customer transaction patterns over time. This page focuses on understanding how different customer segments perform in terms of transaction activity and transaction value.</p>
-<p>By allowing users to filter the data based on customer value segments, time periods, and transaction types, this page helps identify behavioral patterns and usage trends within the fintech platform.</p>
-<p><img src="images/clipboard-2791231218.png" class="img-fluid"></p>
-<section id="customer-lifetime-value-selection" class="level4">
-<h4 class="anchored" data-anchor-id="customer-lifetime-value-selection">Customer Lifetime Value Selection</h4>
-<p>Users can select a Customer Lifetime Value (CLV) segment from the dropdown menu. This filter allows users to analyze how transaction behavior differs across customer value tiers. For example, higher-value customers may show higher transaction frequency or larger transaction amounts.</p>
-</section>
-<section id="month-selection" class="level4">
-<h4 class="anchored" data-anchor-id="month-selection">Month Selection</h4>
-<p>Users can select the month or time period of transactions to focus on specific periods of activity.</p>
-</section>
-<section id="transaction-type-selection" class="level4">
-<h4 class="anchored" data-anchor-id="transaction-type-selection">Transaction Type Selection</h4>
-<p>Users can filter the data based on type of transaction, such as:</p>
-<ul>
-<li><p>Transfer</p></li>
-<li><p>Payment</p></li>
-<li><p>Withdrawal</p></li>
-<li><p>Deposit</p></li>
-</ul>
-<p>This feature helps users understand which types of financial activities are most common among customers.</p>
-<p>The results are displayed using two line graphs in one plot which are transaction count line and transaction amount line. These will helps identify transaction frequency trends.</p>
-</section>
-</section>
-<section id="churn-analysis-tab" class="level3">
-<h3 class="anchored" data-anchor-id="churn-analysis-tab">5.2.3 Churn analysis tab</h3>
-<p>The objective of this page is to allow users to confirm statistically significant relationships between customer attributes and churn risk. Instead of only visual exploration, this page also enables hypothesis testing.</p>
-<p><img src="images/clipboard-715139934.png" class="img-fluid"></p>
-<section id="y-variable-selection" class="level4">
-<h4 class="anchored" data-anchor-id="y-variable-selection">Y Variable Selection</h4>
-<p>Users can choose a categorical variable for the Y-axis to analyze relationships with churn groups.</p>
-<p>Examples include:</p>
-<ul>
-<li><p>Active products</p></li>
-<li><p>Customer segments</p></li>
-<li><p>Income level</p></li>
-<li><p>Education level</p></li>
-</ul>
-</section>
-<section id="display-type-selection" class="level4">
-<h4 class="anchored" data-anchor-id="display-type-selection">Display Type Selection</h4>
-<p>Users can choose how the results are displayed whether they want to see data in count or percentage value. This helps users interpret the results based on absolute numbers or proportions.</p>
-</section>
-<section id="statistical-test-selection" class="level4">
-<h4 class="anchored" data-anchor-id="statistical-test-selection">Statistical Test Selection</h4>
-<p>Users can choose the statistical test type which are parametric teat or non-parametric test which determines the significance threshold used in the hypothesis test.</p>
-<p>The results are displayed using stacked bar charts, showing the distribution of variables across churn probability groups.</p>
-</section>
-</section>
-</section>
-<section id="cluster-analysis-tab" class="level2">
-<h2 class="anchored" data-anchor-id="cluster-analysis-tab">5.3 Cluster Analysis tab</h2>
-<p>The Cluster Analysis tab allows users to explore customer segmentation using clustering techniques. The objective of this page is to identify groups of customers with similar characteristics or behaviors. By understanding these segments, businesses can develop more targeted marketing strategies and improve customer engagement.</p>
-<p><img src="images/clipboard-3485063717.png" class="img-fluid"></p>
-<section id="number-of-clusters-selection" class="level4">
-<h4 class="anchored" data-anchor-id="number-of-clusters-selection">Number of Clusters Selection</h4>
-<p>Users can select the number of clusters (k) from a slide bar. This feature allows users to experiment with different segmentation levels.</p>
-<p>The clustering results are displayed using a scatter plot visualization, where each point represents a customer and colors represent different clusters.</p>
-</section>
-</section>
-<section id="decision-tree-tab" class="level2">
-<h2 class="anchored" data-anchor-id="decision-tree-tab">5.4 Decision tree tab</h2>
-<p>The Decision tree tab is designed to identify the key factors that influence customer churn probability. This page uses a decision tree model to analyze relationships between customer attributes and churn risk.</p>
-<p><img src="images/clipboard-1868013280.png" class="img-fluid"></p>
-<p>The main output of this page is a decision tree diagram that illustrates how customers are classified into different churn probability groups based on their characteristics.</p>
-<p>Each branch of the tree represents a decision rule based on a specific variable, while each node represents a split in the data that separates customers into different groups.</p>
-<p>This visualization helps users easily interpret how different customer attributes influence churn risk.</p>
-</section>
-</section>
 <section id="reference" class="level1">
-<h1>6. Reference</h1>
+<h1>5. Reference</h1>
 <p><a href="https://www.sciencedirect.com/science/article/pii/S2352340926000375" class="uri">https://www.sciencedirect.com/science/article/pii/S2352340926000375</a></p>
 <p><a href="https://giniceseah.netlify.app/posts/2021-07-31-storyboard/" class="uri">https://giniceseah.netlify.app/posts/2021-07-31-storyboard/</a></p>
 <p><a href="https://r4va.netlify.app/chap21" class="uri">https://r4va.netlify.app/chap21</a></p>
