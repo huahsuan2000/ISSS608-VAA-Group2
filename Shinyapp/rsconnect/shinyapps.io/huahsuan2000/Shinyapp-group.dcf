@@ -1,0 +1,12 @@
+name: Shinyapp-group
+title: Shinyapp-group
+username: huahsuan2000
+account: huahsuan2000
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 16936239
+bundleId: 11735669
+url: https://huahsuan2000.shinyapps.io/Shinyapp-group/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

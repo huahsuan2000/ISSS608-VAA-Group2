@@ -336,3 +336,59 @@ tibble(
   Value = round(c(rmse_value_rf, mae_value_rf, r2_value_rf), 4)
 )
 ```
+
+# UI Design Introduction
+
+This Predict Model Shiny app enables users to construct either a Decision Tree or a Random Forest model by selecting input variables and tuning key hyperparameters. Users can adjust the train/test split ratio for both models, as well as model-specific parameters such as minimum split, maximum depth, and complexity parameter (for Decision Tree), or the number of trees (for Random Forest).
+
+Upon model completion, the app provides comprehensive performance metrics, including RMSE, MAE, and R-squared. It also features interactive visualizations: the Decision Tree structure (exclusive to the tree model), the distribution of predicted vs. actual values, and feature importance (available for both). To enhance practical utility, a “Scenario Prediction” section is integrated, allowing users to input specific values and obtain real-time predictions based on the active model.
+
+![](images/clipboard-4178123747.png)
+
+## Control Panel
+
+The Left Control Panel allows users to adjust key model settings, including variable selection and the train/test split ratio for both models. Additionally, users can modify model-specific parameters: minimum split, maximum depth, and complexity parameter (for Decision Tree), or the number of trees (for Random Forest). It also includes parameter definitions to help users better understand the technical meaning and impact of each setting.
+
+-   Decision Tree
+
+    ![](images/clipboard-564498122.png)
+
+-   Random Forest
+
+    ![](images/clipboard-3703075994.png)
+
+## Model Performance
+
+This section summarizes how well the decision tree performs on the test dataset. After clicking “Build Model,” the app automatically calculates RMSE, MAE, and R-squared to evaluate prediction accuracy and overall model fit.
+
+-   Decision Tree
+
+    ![](images/clipboard-1589619322.png)
+
+-   Random Forest
+
+    ![](images/clipboard-1637959753.png)
+
+## Model Visualization
+
+Displays the main visual outputs of the trained model, including the tree structure (for Decision Tree), predicted vs actual results on the test dataset, and the top 10 most important variables. This section helps users interpret model behavior and evaluate prediction performance.
+
+-   Decision Tree
+
+    ![](images/clipboard-501234892.png)
+
+-   Random Forest
+
+    ![](images/clipboard-3394370475.png)
+
+## Scenario Prediction
+
+Allows users to test a custom scenario by entering values for the variables used in the current model. The app then generates the predicted churn probability and displays the corresponding terminal node and decision path.
+
+-   Decision Tree
+
+    ![](images/clipboard-2134408216.png)
+
+-   Random Forest
+
+    ![](images/clipboard-3603814979.png)

@@ -133,11 +133,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Overview</span>
     </span>
   </li>  
-  <li class="nav-item">
-    <span class="nav-link">
-<span class="menu-text">Shiny App</span>
-    </span>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-shiny-app" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Shiny App</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-shiny-app">    
+        <li>
+    <a class="dropdown-item" href="https://huahsuan2000.shinyapps.io/Shinyapp-group/">
+ <span class="dropdown-text">Shiny App</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../Shinyapp/user_guide.html">
+ <span class="dropdown-text">User Guide</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-prototype" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Prototype</span>
@@ -235,7 +245,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#churn_probability-vs-customer-lifetime-value" id="toc-churn_probability-vs-customer-lifetime-value" class="nav-link" data-scroll-target="#churn_probability-vs-customer-lifetime-value">4.11 Churn_probability VS Customer lifetime value</a></li>
   <li><a href="#churn_probability-vs-average-login-frequency" id="toc-churn_probability-vs-average-login-frequency" class="nav-link" data-scroll-target="#churn_probability-vs-average-login-frequency">4.12 Churn_probability VS Average login frequency</a></li>
   </ul></li>
-  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">5. Reference</a></li>
+  <li><a href="#storyboard---ui-design" id="toc-storyboard---ui-design" class="nav-link" data-scroll-target="#storyboard---ui-design">5. Storyboard - UI Design</a>
+  <ul class="collapse">
+  <li><a href="#summary-tab" id="toc-summary-tab" class="nav-link" data-scroll-target="#summary-tab">5.1 Summary tab</a></li>
+  <li><a href="#exploration-tab" id="toc-exploration-tab" class="nav-link" data-scroll-target="#exploration-tab">5.2 Exploration tab</a>
+  <ul class="collapse">
+  <li><a href="#customer-overview-tab" id="toc-customer-overview-tab" class="nav-link" data-scroll-target="#customer-overview-tab">5.2.1 Customer overview tab</a></li>
+  <li><a href="#transaction-behavior-tab" id="toc-transaction-behavior-tab" class="nav-link" data-scroll-target="#transaction-behavior-tab">5.2.2 Transaction behavior tab</a></li>
+  <li><a href="#churn-analysis-tab" id="toc-churn-analysis-tab" class="nav-link" data-scroll-target="#churn-analysis-tab">5.2.3 Churn analysis tab</a></li>
+  </ul></li>
+  <li><a href="#cluster-analysis-tab" id="toc-cluster-analysis-tab" class="nav-link" data-scroll-target="#cluster-analysis-tab">5.3 Cluster Analysis tab</a></li>
+  <li><a href="#decision-tree-tab" id="toc-decision-tree-tab" class="nav-link" data-scroll-target="#decision-tree-tab">5.4 Decision tree tab</a></li>
+  </ul></li>
+  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference">6. Reference</a></li>
   </ul>
 </nav>
     </div>
@@ -1500,8 +1522,151 @@ fit well, and are therefore rescaled.
 </div>
 </section>
 </section>
+<section id="storyboard---ui-design" class="level1">
+<h1>5. Storyboard - UI Design</h1>
+<p>This dashboard is designed to help users explore customer behavior in a Latin American fintech platform. The storyboard structure guides users from a high-level overview to deeper analysis, including customer demographics, transaction patterns, customer segmentation, and churn analysis.</p>
+<p>The dashboard contains four main sections:</p>
+<ol type="1">
+<li><p>Summary</p></li>
+<li><p>Exploration</p></li>
+<li><p>Cluster Analysis</p></li>
+<li><p>Decision Tree Analysis</p></li>
+</ol>
+<p>Each page allows users to interact with the data through filters, visualizations, and statistical analysis.</p>
+<section id="summary-tab" class="level2">
+<h2 class="anchored" data-anchor-id="summary-tab">5.1 Summary tab</h2>
+<p>The Summary page provides a high-level overview of the customer dataset and key business metrics. It allows users to quickly understand the overall status of the customer base before exploring detailed analysis.</p>
+<p><img src="images/clipboard-1194473738.png" class="img-fluid"></p>
+<p>At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These KPIs help decision-makers quickly assess the overall performance of the fintech platform.</p>
+<p>Below the KPI section, several charts provide an overview of customer characteristics and behaviors. These visualizations provide a quick understanding of the customer base and highlight patterns that may require further investigation.</p>
+</section>
+<section id="exploration-tab" class="level2">
+<h2 class="anchored" data-anchor-id="exploration-tab">5.2 Exploration tab</h2>
+<p>The Exploration page allows users to perform Exploratory Data Analysis (EDA) by dynamically selecting variables and visualization types and the confirmatory Data Analysis page allows users to statistically validate relationships between variables. This page helps users explore relationships between different customer attributes.</p>
+<section id="customer-overview-tab" class="level3">
+<h3 class="anchored" data-anchor-id="customer-overview-tab">5.2.1 Customer overview tab</h3>
+<p>The main goal of this page is to allow users to interactively explore customer characteristics and distributions.</p>
+<p><img src="images/clipboard-1352613092.png" class="img-fluid"></p>
+<p>At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These metrics provide quick insights into customer demographics and risk levels.</p>
+<section id="variable-selection" class="level4">
+<h4 class="anchored" data-anchor-id="variable-selection">Variable Selection</h4>
+<p>There are a filter bar that users can choose X and Y variable type whether they want categorical or numerical variable. After select type of variable user can select which variable in that type that they want to discover the relationship in the Select X/Y Variable filter. User click Submit botton to display in the visualization.</p>
+<p>The visualization will be consisted of 4 possible pairs of x and y variable type. The visualization will shown in different plot as shown in table below</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>X Variable Type</th>
+<th>Y Variable Type</th>
+<th>The Visualization</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Numerical</td>
+<td>Numerical</td>
+<td>Scatter plot</td>
+</tr>
+<tr class="even">
+<td>Numerical</td>
+<td>Categorical</td>
+<td>Box plot</td>
+</tr>
+<tr class="odd">
+<td>Categorical</td>
+<td>Numerical</td>
+<td>Box plot</td>
+</tr>
+<tr class="even">
+<td>Categorical</td>
+<td>Categorical</td>
+<td>Heatmap</td>
+</tr>
+</tbody>
+</table>
+<p>This allows users to explore different relationship between all variables and flexibility helps users view the data from different perspectives</p>
+</section>
+<section id="export-option" class="level4">
+<h4 class="anchored" data-anchor-id="export-option">Export Option</h4>
+<p>This allows users to easily share findings with stakeholders.</p>
+</section>
+<section id="geographic-distribution" class="level4">
+<h4 class="anchored" data-anchor-id="geographic-distribution">Geographic Distribution</h4>
+<p>A map visualization displays the geographical distribution of customers across regions, helping identify areas with higher customer concentration.</p>
+</section>
+</section>
+<section id="transaction-behavior-tab" class="level3">
+<h3 class="anchored" data-anchor-id="transaction-behavior-tab">5.2.2 Transaction behavior tab</h3>
+<p>The Transaction Behavior tab allows users to analyze customer transaction patterns over time. This page focuses on understanding how different customer segments perform in terms of transaction activity and transaction value.</p>
+<p>By allowing users to filter the data based on customer value segments, time periods, and transaction types, this page helps identify behavioral patterns and usage trends within the fintech platform.</p>
+<p><img src="images/clipboard-2791231218.png" class="img-fluid"></p>
+<section id="customer-lifetime-value-selection" class="level4">
+<h4 class="anchored" data-anchor-id="customer-lifetime-value-selection">Customer Lifetime Value Selection</h4>
+<p>Users can select a Customer Lifetime Value (CLV) segment from the dropdown menu. This filter allows users to analyze how transaction behavior differs across customer value tiers. For example, higher-value customers may show higher transaction frequency or larger transaction amounts.</p>
+</section>
+<section id="month-selection" class="level4">
+<h4 class="anchored" data-anchor-id="month-selection">Month Selection</h4>
+<p>Users can select the month or time period of transactions to focus on specific periods of activity.</p>
+</section>
+<section id="transaction-type-selection" class="level4">
+<h4 class="anchored" data-anchor-id="transaction-type-selection">Transaction Type Selection</h4>
+<p>Users can filter the data based on type of transaction, such as:</p>
+<ul>
+<li><p>Transfer</p></li>
+<li><p>Payment</p></li>
+<li><p>Withdrawal</p></li>
+<li><p>Deposit</p></li>
+</ul>
+<p>This feature helps users understand which types of financial activities are most common among customers.</p>
+<p>The results are displayed using two line graphs in one plot which are transaction count line and transaction amount line. These will helps identify transaction frequency trends.</p>
+</section>
+</section>
+<section id="churn-analysis-tab" class="level3">
+<h3 class="anchored" data-anchor-id="churn-analysis-tab">5.2.3 Churn analysis tab</h3>
+<p>The objective of this page is to allow users to confirm statistically significant relationships between customer attributes and churn risk. Instead of only visual exploration, this page also enables hypothesis testing.</p>
+<p><img src="images/clipboard-715139934.png" class="img-fluid"></p>
+<section id="y-variable-selection" class="level4">
+<h4 class="anchored" data-anchor-id="y-variable-selection">Y Variable Selection</h4>
+<p>Users can choose a categorical variable for the Y-axis to analyze relationships with churn groups.</p>
+<p>Examples include:</p>
+<ul>
+<li><p>Active products</p></li>
+<li><p>Customer segments</p></li>
+<li><p>Income level</p></li>
+<li><p>Education level</p></li>
+</ul>
+</section>
+<section id="display-type-selection" class="level4">
+<h4 class="anchored" data-anchor-id="display-type-selection">Display Type Selection</h4>
+<p>Users can choose how the results are displayed whether they want to see data in count or percentage value. This helps users interpret the results based on absolute numbers or proportions.</p>
+</section>
+<section id="statistical-test-selection" class="level4">
+<h4 class="anchored" data-anchor-id="statistical-test-selection">Statistical Test Selection</h4>
+<p>Users can choose the statistical test type which are parametric teat or non-parametric test which determines the significance threshold used in the hypothesis test.</p>
+<p>The results are displayed using stacked bar charts, showing the distribution of variables across churn probability groups.</p>
+</section>
+</section>
+</section>
+<section id="cluster-analysis-tab" class="level2">
+<h2 class="anchored" data-anchor-id="cluster-analysis-tab">5.3 Cluster Analysis tab</h2>
+<p>The Cluster Analysis tab allows users to explore customer segmentation using clustering techniques. The objective of this page is to identify groups of customers with similar characteristics or behaviors. By understanding these segments, businesses can develop more targeted marketing strategies and improve customer engagement.</p>
+<p><img src="images/clipboard-3485063717.png" class="img-fluid"></p>
+<section id="number-of-clusters-selection" class="level4">
+<h4 class="anchored" data-anchor-id="number-of-clusters-selection">Number of Clusters Selection</h4>
+<p>Users can select the number of clusters (k) from a slide bar. This feature allows users to experiment with different segmentation levels.</p>
+<p>The clustering results are displayed using a scatter plot visualization, where each point represents a customer and colors represent different clusters.</p>
+</section>
+</section>
+<section id="decision-tree-tab" class="level2">
+<h2 class="anchored" data-anchor-id="decision-tree-tab">5.4 Decision tree tab</h2>
+<p>The Decision tree tab is designed to identify the key factors that influence customer churn probability. This page uses a decision tree model to analyze relationships between customer attributes and churn risk.</p>
+<p><img src="images/clipboard-1868013280.png" class="img-fluid"></p>
+<p>The main output of this page is a decision tree diagram that illustrates how customers are classified into different churn probability groups based on their characteristics.</p>
+<p>Each branch of the tree represents a decision rule based on a specific variable, while each node represents a split in the data that separates customers into different groups.</p>
+<p>This visualization helps users easily interpret how different customer attributes influence churn risk.</p>
+</section>
+</section>
 <section id="reference" class="level1">
-<h1>5. Reference</h1>
+<h1>6. Reference</h1>
 <p><a href="https://www.sciencedirect.com/science/article/pii/S2352340926000375" class="uri">https://www.sciencedirect.com/science/article/pii/S2352340926000375</a></p>
 <p><a href="https://giniceseah.netlify.app/posts/2021-07-31-storyboard/" class="uri">https://giniceseah.netlify.app/posts/2021-07-31-storyboard/</a></p>
 <p><a href="https://r4va.netlify.app/chap21" class="uri">https://r4va.netlify.app/chap21</a></p>

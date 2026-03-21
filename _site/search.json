@@ -77,6 +77,223 @@
     "text": "Preparation for Group Project Proposal\n\nThe meeting then moved on to the task allocation stage. It was finally decided that Hua-Hsuan would be responsible for the Predictive Modelling section, Walaiporn would handle the Exploratory Data Analysis and Confirmatory Data Analysis, and Huaqiu would take charge of the Cluster Analysis part.\nThere being no other matters, the meeting ended at 5:00 pm."
   },
   {
+    "objectID": "Prototype/Predict_Model.html",
+    "href": "Prototype/Predict_Model.html",
+    "title": "Predict Model",
+    "section": "",
+    "text": "pacman::p_load(tidyverse, rpart, rpart.plot, sparkline, visNetwork, \n               caret, ranger, patchwork)\n\n\ncustomer_data &lt;- read_csv(\"data/customer_data.csv\") \n\nRows: 48723 Columns: 54\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (13): gender, location, income_bracket, occupation, education_level, ma...\ndbl  (29): customer_id, age, household_size, active_products, app_logins_fre...\nlgl   (7): savings_account, credit_card, personal_loan, investment_account, ...\ndate  (5): first_tx, last_tx, last_survey_date, last_transaction_date, first...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#check-for-duplicates",
+    "href": "Prototype/Predict_Model.html#check-for-duplicates",
+    "title": "Predict Model",
+    "section": "Check for duplicates",
+    "text": "Check for duplicates\n\nduplicate_count &lt;- sum(duplicated(customer_data))\n\nif (duplicate_count &gt; 0) {\n  message(\"There are \", duplicate_count, \" duplicate rows in the dataset.\")\n} else {\n  message(\"There are no duplicate rows in the dataset.\")\n}\n\nThere are no duplicate rows in the dataset.\n\n\nA quick check for duplicate records confirms that there are no duplicated customer IDs in the customer dataset."
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#check-and-handle-missing-value",
+    "href": "Prototype/Predict_Model.html#check-and-handle-missing-value",
+    "title": "Predict Model",
+    "section": "check and handle missing value",
+    "text": "check and handle missing value\n\nna_summary &lt;- data.frame(\n  column_name = names(customer_data),\n  na_count = sapply(customer_data, function(x) sum(is.na(x))),\n  na_percentage = sapply(customer_data, function(x) mean(is.na(x)) * 100)\n)\n\nna_summary %&gt;%\n  filter(na_count &gt; 0)\n\n                                      column_name na_count na_percentage\ncredit_utilization_ratio credit_utilization_ratio    18263      37.48332\nfeature_requests                 feature_requests    16115      33.07473\ncomplaint_topics                 complaint_topics    24346      49.96819\n\n\nThe variables credit_utilization_ratio and feature_requests were removed from the dataset due to their relatively high proportion of missing values. For the variable complaint_topics, missing values were interpreted as cases where customers did not report any specific complaints. Therefore, these missing entries were recoded as “No complaint”.\n\ncustomer_data &lt;- customer_data %&gt;% select(-credit_utilization_ratio, -feature_requests)\ncustomer_data &lt;- customer_data %&gt;%\n  mutate(\n    complaint_topics = ifelse(is.na(complaint_topics),\n                              \"No complaint\",\n                              complaint_topics)\n  )"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#confirm-data-type-of-target-variable",
+    "href": "Prototype/Predict_Model.html#confirm-data-type-of-target-variable",
+    "title": "Predict Model",
+    "section": "Confirm data type of target variable",
+    "text": "Confirm data type of target variable\nThe target variable churn_probability was checked before modeling. The summary statistics indicate that the variable ranges from 0.114 to 0.501 and is stored as a numeric type, confirming that a regression tree is appropriate for this analysis.\n\nsummary(customer_data$churn_probability)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n 0.1143  0.3029  0.3540  0.3429  0.3927  0.5006 \n\nclass(customer_data$churn_probability)\n\n[1] \"numeric\""
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#convert-character-variables-to-factors",
+    "href": "Prototype/Predict_Model.html#convert-character-variables-to-factors",
+    "title": "Predict Model",
+    "section": "Convert Character Variables to Factors",
+    "text": "Convert Character Variables to Factors\nAll character variables were converted into factor type so that they can be correctly treated as categorical variables in the decision tree model.\n\ncustomer_data &lt;- customer_data %&gt;%\n  mutate(across(where(is.character), as.factor))"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#remove-unnecessary-attributes",
+    "href": "Prototype/Predict_Model.html#remove-unnecessary-attributes",
+    "title": "Predict Model",
+    "section": "Remove unnecessary attributes",
+    "text": "Remove unnecessary attributes\nSeveral attributes were removed during the preprocessing stage to improve model reliability. First, customer_id was removed because it represents a unique identifier for each customer. Including such variables in the model would not contribute to predictive power and may lead to overfitting.\nIn addition, first_tx and first_transaction_date were identified as duplicated attributes describing the customer’s first transaction date. Since the first transaction timing is considered to have limited interpretability for predicting churn behavior in the current analysis, these variables were removed.\nSimilarly, last_tx and last_transaction_date share the same definition of the customer’s most recent transaction date. However, inconsistencies were observed between the two columns. To avoid potential misuse of ambiguous information, both variables were excluded from the modeling dataset.\nThe variable last_survey_date was removed from the model because its date format is incompatible with decision tree algorithms. Furthermore, initial assessments indicated that the specific date of the last survey has no direct correlation with churn probability, making it a redundant feature for this analysis.\n\ncustomer_data &lt;- customer_data %&gt;%\n  select(\n    -customer_id,\n    -first_tx,\n    -first_transaction_date,\n    -last_tx,\n    -last_transaction_date,\n    -last_survey_date\n  )\n\n\nglimpse(customer_data)\n\nRows: 48,723\nColumns: 46\n$ age                        &lt;dbl&gt; 44, 44, 45, 45, 44, 45, 44, 44, 45, 44, 44,…\n$ gender                     &lt;fct&gt; Male, Male, Male, Male, Female, Female, Mal…\n$ location                   &lt;fct&gt; \"Pereira, Risaralda\", \"Cali, Valle del Cauc…\n$ income_bracket             &lt;fct&gt; Very High, Medium, High, High, Medium, Medi…\n$ occupation                 &lt;fct&gt; Engineer, Construction Worker, Construction…\n$ education_level            &lt;fct&gt; Master, Bachelor, Bachelor, High School, Ba…\n$ marital_status             &lt;fct&gt; Married, Married, Married, Single, Married,…\n$ household_size             &lt;dbl&gt; 5, 2, 4, 2, 3, 4, 4, 3, 1, 3, 5, 3, 3, 7, 3…\n$ acquisition_channel        &lt;fct&gt; Partnership, Paid Ad, Paid Ad, Referral, Pa…\n$ customer_segment           &lt;fct&gt; occasional, regular, inactive, inactive, po…\n$ savings_account            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…\n$ credit_card                &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE…\n$ personal_loan              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…\n$ investment_account         &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALS…\n$ insurance_product          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…\n$ active_products            &lt;dbl&gt; 1, 5, 3, 2, 1, 1, 1, 4, 2, 3, 1, 5, 3, 1, 1…\n$ app_logins_frequency       &lt;dbl&gt; 15, 30, 4, 15, 19, 15, 44, 22, 7, 11, 7, 30…\n$ feature_usage_diversity    &lt;dbl&gt; 3, 0, 4, 4, 1, 4, 6, 1, 1, 6, 3, 1, 2, 1, 3…\n$ bill_payment_user          &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE,…\n$ auto_savings_enabled       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FA…\n$ international_transactions &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0…\n$ failed_transactions        &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0…\n$ tx_count                   &lt;dbl&gt; 76, 10, 10, 23, 18, 15, 24, 45, 134, 13, 18…\n$ avg_tx_value               &lt;dbl&gt; 1679872.4, 5445810.0, 640335.0, 660180.4, 1…\n$ total_tx_volume            &lt;dbl&gt; 127670300, 54458100, 6403350, 15184150, 262…\n$ base_satisfaction          &lt;dbl&gt; 9.213372, 6.073093, 8.198643, 7.529577, 6.6…\n$ tx_satisfaction            &lt;dbl&gt; 0.380, 0.050, 0.050, 0.115, 0.090, 0.075, 0…\n$ product_satisfaction       &lt;dbl&gt; 0.6, 0.2, 0.6, 0.4, 0.4, 0.6, 0.4, 0.4, 0.6…\n$ satisfaction_score         &lt;dbl&gt; 5, 3, 4, 4, 3, 4, 4, 4, 5, 4, 4, 5, 4, 3, 4…\n$ nps_score                  &lt;dbl&gt; -7, -46, -29, -31, -47, -29, -34, -36, -4, …\n$ support_tickets_count      &lt;dbl&gt; 1, 1, 0, 2, 2, 1, 1, 0, 2, 0, 0, 2, 3, 1, 0…\n$ resolved_tickets_ratio     &lt;dbl&gt; 0.0000000, 1.0000000, 0.0000000, 0.5000000,…\n$ app_store_rating           &lt;dbl&gt; 3.5, 4.0, 5.0, 4.5, 4.0, 4.0, 5.0, 4.5, 4.5…\n$ feedback_sentiment         &lt;fct&gt; Neutral, Positive, Positive, Positive, Posi…\n$ complaint_topics           &lt;fct&gt; No complaint, No complaint, No complaint, N…\n$ clv_segment                &lt;fct&gt; Gold, Bronze, Gold, Bronze, Gold, Bronze, B…\n$ monthly_transaction_count  &lt;dbl&gt; 1.428571, 1.571429, 2.500000, 1.555556, 2.1…\n$ average_transaction_value  &lt;dbl&gt; 6054025.0, 2127413.6, 3575915.0, 1513353.6,…\n$ total_transaction_volume   &lt;dbl&gt; 60540250, 23401550, 35759150, 21186950, 116…\n$ transaction_frequency      &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ preferred_transaction_type &lt;fct&gt; Transfer, Transfer, Transfer, Transfer, Pay…\n$ weekend_transaction_ratio  &lt;dbl&gt; 0.30000000, 0.18181818, 0.30000000, 0.14285…\n$ avg_daily_transactions     &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ customer_tenure            &lt;dbl&gt; 11.633333, 11.500000, 8.766667, 10.733333, …\n$ churn_probability          &lt;dbl&gt; 0.3622688, 0.1817896, 0.3212651, 0.3366287,…\n$ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 35978105, 3…"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#export-rds-file-for-shiny",
+    "href": "Prototype/Predict_Model.html#export-rds-file-for-shiny",
+    "title": "Predict Model",
+    "section": "Export RDS file for shiny",
+    "text": "Export RDS file for shiny\n\nwrite_rds(customer_data, \"data/customer_data_clean.rds\")\n\n\ncustomer_data_clean &lt;- read_rds(\"data/customer_data_clean.rds\")\nglimpse(customer_data_clean)\n\nRows: 48,723\nColumns: 46\n$ age                        &lt;dbl&gt; 44, 44, 45, 45, 44, 45, 44, 44, 45, 44, 44,…\n$ gender                     &lt;fct&gt; Male, Male, Male, Male, Female, Female, Mal…\n$ location                   &lt;fct&gt; \"Pereira, Risaralda\", \"Cali, Valle del Cauc…\n$ income_bracket             &lt;fct&gt; Very High, Medium, High, High, Medium, Medi…\n$ occupation                 &lt;fct&gt; Engineer, Construction Worker, Construction…\n$ education_level            &lt;fct&gt; Master, Bachelor, Bachelor, High School, Ba…\n$ marital_status             &lt;fct&gt; Married, Married, Married, Single, Married,…\n$ household_size             &lt;dbl&gt; 5, 2, 4, 2, 3, 4, 4, 3, 1, 3, 5, 3, 3, 7, 3…\n$ acquisition_channel        &lt;fct&gt; Partnership, Paid Ad, Paid Ad, Referral, Pa…\n$ customer_segment           &lt;fct&gt; occasional, regular, inactive, inactive, po…\n$ savings_account            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…\n$ credit_card                &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE…\n$ personal_loan              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…\n$ investment_account         &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALS…\n$ insurance_product          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…\n$ active_products            &lt;dbl&gt; 1, 5, 3, 2, 1, 1, 1, 4, 2, 3, 1, 5, 3, 1, 1…\n$ app_logins_frequency       &lt;dbl&gt; 15, 30, 4, 15, 19, 15, 44, 22, 7, 11, 7, 30…\n$ feature_usage_diversity    &lt;dbl&gt; 3, 0, 4, 4, 1, 4, 6, 1, 1, 6, 3, 1, 2, 1, 3…\n$ bill_payment_user          &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE,…\n$ auto_savings_enabled       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FA…\n$ international_transactions &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0…\n$ failed_transactions        &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0…\n$ tx_count                   &lt;dbl&gt; 76, 10, 10, 23, 18, 15, 24, 45, 134, 13, 18…\n$ avg_tx_value               &lt;dbl&gt; 1679872.4, 5445810.0, 640335.0, 660180.4, 1…\n$ total_tx_volume            &lt;dbl&gt; 127670300, 54458100, 6403350, 15184150, 262…\n$ base_satisfaction          &lt;dbl&gt; 9.213372, 6.073093, 8.198643, 7.529577, 6.6…\n$ tx_satisfaction            &lt;dbl&gt; 0.380, 0.050, 0.050, 0.115, 0.090, 0.075, 0…\n$ product_satisfaction       &lt;dbl&gt; 0.6, 0.2, 0.6, 0.4, 0.4, 0.6, 0.4, 0.4, 0.6…\n$ satisfaction_score         &lt;dbl&gt; 5, 3, 4, 4, 3, 4, 4, 4, 5, 4, 4, 5, 4, 3, 4…\n$ nps_score                  &lt;dbl&gt; -7, -46, -29, -31, -47, -29, -34, -36, -4, …\n$ support_tickets_count      &lt;dbl&gt; 1, 1, 0, 2, 2, 1, 1, 0, 2, 0, 0, 2, 3, 1, 0…\n$ resolved_tickets_ratio     &lt;dbl&gt; 0.0000000, 1.0000000, 0.0000000, 0.5000000,…\n$ app_store_rating           &lt;dbl&gt; 3.5, 4.0, 5.0, 4.5, 4.0, 4.0, 5.0, 4.5, 4.5…\n$ feedback_sentiment         &lt;fct&gt; Neutral, Positive, Positive, Positive, Posi…\n$ complaint_topics           &lt;fct&gt; No complaint, No complaint, No complaint, N…\n$ clv_segment                &lt;fct&gt; Gold, Bronze, Gold, Bronze, Gold, Bronze, B…\n$ monthly_transaction_count  &lt;dbl&gt; 1.428571, 1.571429, 2.500000, 1.555556, 2.1…\n$ average_transaction_value  &lt;dbl&gt; 6054025.0, 2127413.6, 3575915.0, 1513353.6,…\n$ total_transaction_volume   &lt;dbl&gt; 60540250, 23401550, 35759150, 21186950, 116…\n$ transaction_frequency      &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ preferred_transaction_type &lt;fct&gt; Transfer, Transfer, Transfer, Transfer, Pay…\n$ weekend_transaction_ratio  &lt;dbl&gt; 0.30000000, 0.18181818, 0.30000000, 0.14285…\n$ avg_daily_transactions     &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ customer_tenure            &lt;dbl&gt; 11.633333, 11.500000, 8.766667, 10.733333, …\n$ churn_probability          &lt;dbl&gt; 0.3622688, 0.1817896, 0.3212651, 0.3366287,…\n$ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 35978105, 3…"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#train-test-split",
+    "href": "Prototype/Predict_Model.html#train-test-split",
+    "title": "Predict Model",
+    "section": "Train-Test Split",
+    "text": "Train-Test Split\nThe Shiny application allows users to customize the train-test split ratio. By default, the system is configured with an 80/20 split, allocating 80% of the dataset for training and the remaining 20% for testing.\n\nset.seed(1234)\n\ntrain_index &lt;- createDataPartition(\n  customer_data_clean$churn_probability,\n  p = 0.8,\n  list = FALSE\n)\n\ndf_train &lt;- customer_data_clean[train_index, ]\ndf_test  &lt;- customer_data_clean[-train_index, ]"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#build-regression-tree-function",
+    "href": "Prototype/Predict_Model.html#build-regression-tree-function",
+    "title": "Predict Model",
+    "section": "Build Regression Tree Function",
+    "text": "Build Regression Tree Function\nSince the target variable churn_probability is a continuous variable, we implemented a regression tree rather than a classification tree. In the current code, the model training function is parameterized specifically for min_split, complexity_parameter, and max_depth. Looking ahead, the Shiny application will expand this flexibility, allowing users to not only tune these parameters but also select their own set of predictors and customize the data partition ratio.\n\ntree_model &lt;- function(min_split, complexity_parameter, max_depth) {\n  rpart(\n    churn_probability ~ .,\n    data = df_train,\n    method = \"anova\",\n    control = rpart.control(\n      minsplit = min_split,\n      cp = complexity_parameter,\n      maxdepth = max_depth\n    )\n  )\n}\n\nfit_tree &lt;- tree_model(min_split = 10, complexity_parameter = 0.001, max_depth = 10\n)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#view-regression-tree",
+    "href": "Prototype/Predict_Model.html#view-regression-tree",
+    "title": "Predict Model",
+    "section": "View Regression Tree",
+    "text": "View Regression Tree\n\nvisTree(fit_tree, edgesFontSize = 14, nodesFontSize = 16, width = \"100%\")"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#predict-on-test-data",
+    "href": "Prototype/Predict_Model.html#predict-on-test-data",
+    "title": "Predict Model",
+    "section": "Predict on Test Data",
+    "text": "Predict on Test Data\n\ndf_test$pred_tree &lt;- predict(fit_tree, newdata = df_test)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data",
+    "href": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data",
+    "title": "Predict Model",
+    "section": "Predicted vs Actual on Test Data",
+    "text": "Predicted vs Actual on Test Data\nTo evaluate the predictive performance, a scatter plot of predicted versus actual churn probabilities was constructed. The strong alignment of data points along the 45-degree reference line demonstrates the high reliability of the regression tree in estimating churn risks.\n\nggplot(df_test, aes(x = churn_probability, y = pred_tree)) +\n  geom_point(alpha = 0.6) +\n  geom_abline(slope = 1, intercept = 0, color = \"red\", linewidth = 1) +\n  labs(\n    title = \"Predicted vs Actual on Test Data\",\n    x = \"Actual Churn Probability\",\n    y = \"Predicted Churn Probability\"\n  ) +\n  theme_minimal(base_size = 13)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#feature-importance-of-decision-tree",
+    "href": "Prototype/Predict_Model.html#feature-importance-of-decision-tree",
+    "title": "Predict Model",
+    "section": "Feature Importance of Decision Tree",
+    "text": "Feature Importance of Decision Tree\nWe extract the variable.importance attribute from the fit_tree model and convert it into a structured table format for easier processing. The variables are then sorted in descending order based on their importance scores, and only the top 10 most influential features are retained. This approach prevents the visualization from becoming overcrowded and ensures that the most critical drivers of the model are clearly highlighted.\n\ntree_importance &lt;- tibble(\n  Variable = names(fit_tree$variable.importance),\n  Importance = as.numeric(fit_tree$variable.importance)\n) %&gt;%\n  arrange(desc(Importance))\n\ntree_importance %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(Variable, Importance), y = Importance)) +\n  geom_col() +\n  coord_flip() +\n  labs(\n    title = \"Feature Importance of Decision Tree\",\n    x = \"Variable\",\n    y = \"Importance\"\n  ) +\n  theme_minimal(base_size = 13)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#model-performance-metrics",
+    "href": "Prototype/Predict_Model.html#model-performance-metrics",
+    "title": "Predict Model",
+    "section": "Model Performance Metrics",
+    "text": "Model Performance Metrics\nThis code segment calculates key performance metrics to evaluate the accuracy of our regression model on the testing dataset:\nRMSE (Root Mean Square Error): Measures the average magnitude of the error by taking the square root of average squared differences. It is particularly sensitive to large outliers.\nMAE (Mean Absolute Error): Represents the average absolute difference between predicted and actual values, offering a more intuitive measure of prediction error.\nR-squared (\\(R^2\\)): Calculated as the square of the correlation between predicted and actual values. It indicates the proportion of variance in churn_probability explained by the model.\nLooking forward, these performance metrics will be integrated into the Shiny application dashboard. This will allow users to monitor the model’s accuracy in real-time as they adjust parameters or update datasets.\n\nrmse_value &lt;- sqrt(mean((df_test$churn_probability - df_test$pred_tree)^2))\nmae_value  &lt;- mean(abs(df_test$churn_probability - df_test$pred_tree))\nr2_value   &lt;- cor(df_test$churn_probability, df_test$pred_tree)^2\n\ntibble(\n  Metric = c(\"RMSE\", \"MAE\", \"R-squared\"),\n  Value = round(c(rmse_value, mae_value, r2_value), 4)\n)\n\n# A tibble: 3 × 2\n  Metric     Value\n  &lt;chr&gt;      &lt;dbl&gt;\n1 RMSE      0.0138\n2 MAE       0.0108\n3 R-squared 0.958"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#train-test-split-1",
+    "href": "Prototype/Predict_Model.html#train-test-split-1",
+    "title": "Predict Model",
+    "section": "Train-Test Split",
+    "text": "Train-Test Split\nSimilar to the decision tree model, the Shiny application allows users to customize the train-test split ratio for the random forest model. By default, the current implementation also uses an 80/20 split, where 80% of the dataset is allocated to the training set and the remaining 20% is reserved for testing.\n\nset.seed(1234)\n\ntrain_index_rf &lt;- createDataPartition(\n  customer_data_clean$churn_probability,\n  p = 0.8,\n  list = FALSE\n)\n\ndf_train_rf &lt;- customer_data_clean[train_index_rf, ]\ndf_test_rf  &lt;- customer_data_clean[-train_index_rf, ]"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#build-random-forest-function",
+    "href": "Prototype/Predict_Model.html#build-random-forest-function",
+    "title": "Predict Model",
+    "section": "Build Random Forest Function",
+    "text": "Build Random Forest Function\nwe use the ranger engine through the caret framework. The current code is parameterized for the number of trees, allowing the model complexity to be adjusted. After the Shiny application will allow users to choose their own predictors, customize the train-test split ratio, and modify the number of trees interactively.\n\nrf_grid &lt;- expand.grid(\n  mtry = max(1, floor(sqrt(ncol(df_train_rf) - 1))),\n  splitrule = \"variance\",\n  min.node.size = 5\n)\n\nrf_control &lt;- trainControl(method = \"none\")\n\nrf_model &lt;- function(num_trees) {\n  train(\n    churn_probability ~ .,\n    data = df_train_rf,\n    method = \"ranger\",\n    trControl = rf_control,\n    tuneGrid = rf_grid,\n    num.trees = num_trees,\n    importance = \"impurity\"\n  )\n}\n\nfit_rf &lt;- rf_model(num_trees = 100)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#predict-on-test-data-1",
+    "href": "Prototype/Predict_Model.html#predict-on-test-data-1",
+    "title": "Predict Model",
+    "section": "Predict on Test Data",
+    "text": "Predict on Test Data\n\ndf_test_rf$pred_rf &lt;- predict(fit_rf, newdata = df_test_rf)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data-1",
+    "href": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data-1",
+    "title": "Predict Model",
+    "section": "Predicted vs Actual on Test Data",
+    "text": "Predicted vs Actual on Test Data\nTo evaluate the predictive performance, a scatter plot of predicted versus actual churn probabilities was constructed. Similar to the decision tree model, a strong concentration of points around the 45-degree reference line indicates that the random forest model is able to generate reliable estimates of churn risk.\n\nggplot(df_test_rf, aes(x = churn_probability, y = pred_rf)) +\n  geom_point(alpha = 0.6) +\n  geom_abline(slope = 1, intercept = 0, color = \"red\", linewidth = 1) +\n  labs(\n    title = \"Predicted vs Actual on Test Data\",\n    x = \"Actual Churn Probability\",\n    y = \"Predicted Churn Probability\"\n  ) +\n  theme_minimal(base_size = 13)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#feature-importance-of-random-forest",
+    "href": "Prototype/Predict_Model.html#feature-importance-of-random-forest",
+    "title": "Predict Model",
+    "section": "Feature Importance of Random Forest",
+    "text": "Feature Importance of Random Forest\nWe extract the variable importance scores from the fitted random forest model using the varImp() function and convert them into a structured table format for easier interpretation. The variables are then sorted in descending order according to their importance scores, and only the top 10 most influential features are displayed.\n\nrf_importance &lt;- varImp(fit_rf)$importance %&gt;%\n  tibble::rownames_to_column(\"Variable\") %&gt;%\n  rename(Importance = Overall) %&gt;%\n  arrange(desc(Importance))\n\nrf_importance %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(Variable, Importance), y = Importance)) +\n  geom_col() +\n  coord_flip() +\n  labs(\n    title = \"Feature Importance of Random Forest\",\n    x = \"Variable\",\n    y = \"Importance\"\n  ) +\n  theme_minimal(base_size = 13)"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#model-performance-metrics-1",
+    "href": "Prototype/Predict_Model.html#model-performance-metrics-1",
+    "title": "Predict Model",
+    "section": "Model Performance Metrics",
+    "text": "Model Performance Metrics\nThe concept is same as decision tree metrics.\n\nrmse_value_rf &lt;- sqrt(mean((df_test_rf$churn_probability - df_test_rf$pred_rf)^2))\nmae_value_rf  &lt;- mean(abs(df_test_rf$churn_probability - df_test_rf$pred_rf))\nr2_value_rf   &lt;- cor(df_test_rf$churn_probability, df_test_rf$pred_rf)^2\n\ntibble(\n  Metric = c(\"RMSE\", \"MAE\", \"R-squared\"),\n  Value = round(c(rmse_value_rf, mae_value_rf, r2_value_rf), 4)\n)\n\n# A tibble: 3 × 2\n  Metric     Value\n  &lt;chr&gt;      &lt;dbl&gt;\n1 RMSE      0.0316\n2 MAE       0.0243\n3 R-squared 0.909"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#control-panel",
+    "href": "Prototype/Predict_Model.html#control-panel",
+    "title": "Predict Model",
+    "section": "Control Panel",
+    "text": "Control Panel\nThe Left Control Panel allows users to adjust key model settings, including variable selection and the train/test split ratio for both models. Additionally, users can modify model-specific parameters: minimum split, maximum depth, and complexity parameter (for Decision Tree), or the number of trees (for Random Forest). It also includes parameter definitions to help users better understand the technical meaning and impact of each setting.\n\nDecision Tree\n\nRandom Forest"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#model-performance",
+    "href": "Prototype/Predict_Model.html#model-performance",
+    "title": "Predict Model",
+    "section": "Model Performance",
+    "text": "Model Performance\nThis section summarizes how well the decision tree performs on the test dataset. After clicking “Build Model,” the app automatically calculates RMSE, MAE, and R-squared to evaluate prediction accuracy and overall model fit.\n\nDecision Tree\n\nRandom Forest"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#model-visualization",
+    "href": "Prototype/Predict_Model.html#model-visualization",
+    "title": "Predict Model",
+    "section": "Model Visualization",
+    "text": "Model Visualization\nDisplays the main visual outputs of the trained model, including the tree structure (for Decision Tree), predicted vs actual results on the test dataset, and the top 10 most important variables. This section helps users interpret model behavior and evaluate prediction performance.\n\nDecision Tree\n\nRandom Forest"
+  },
+  {
+    "objectID": "Prototype/Predict_Model.html#scenario-prediction",
+    "href": "Prototype/Predict_Model.html#scenario-prediction",
+    "title": "Predict Model",
+    "section": "Scenario Prediction",
+    "text": "Scenario Prediction\nAllows users to test a custom scenario by entering values for the variables used in the current model. The app then generates the predicted churn probability and displays the corresponding terminal node and decision path.\n\nDecision Tree\n\nRandom Forest"
+  },
+  {
+    "objectID": "Prototype/Cluster.html",
+    "href": "Prototype/Cluster.html",
+    "title": "Cluster Analysis",
+    "section": "",
+    "text": "pacman::p_load(\n  tidyverse,\n  lubridate,\n  factoextra,\n  plotly,\n  scales,\n  cluster,\n  DT,\n  corrplot,\n  shiny\n)\n\n\ncustomer_data &lt;- read_csv(\"data/customer_data.csv\") \n\nRows: 48723 Columns: 54\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (13): gender, location, income_bracket, occupation, education_level, ma...\ndbl  (29): customer_id, age, household_size, active_products, app_logins_fre...\nlgl   (7): savings_account, credit_card, personal_loan, investment_account, ...\ndate  (5): first_tx, last_tx, last_survey_date, last_transaction_date, first...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+  },
+  {
+    "objectID": "Prototype/Cluster.html#choosing-number-of-clusters",
+    "href": "Prototype/Cluster.html#choosing-number-of-clusters",
+    "title": "Cluster Analysis",
+    "section": "Choosing number of clusters",
+    "text": "Choosing number of clusters\n\nset.seed(1234)\n\nsample_n &lt;- 3000\nsample_idx &lt;- sample(seq_len(nrow(cluster_scaled)), sample_n)\n\ncluster_sample &lt;- cluster_scaled[sample_idx, ]\n\nfviz_nbclust(cluster_sample, kmeans, method = \"wss\", k.max = 8)\n\n\n\n\n\n\n\nfviz_nbclust(cluster_sample, kmeans, method = \"silhouette\", k.max = 8)"
+  },
+  {
+    "objectID": "Prototype/Cluster.html#k-means",
+    "href": "Prototype/Cluster.html#k-means",
+    "title": "Cluster Analysis",
+    "section": "K-means",
+    "text": "K-means\n\ncluster_input &lt;- customer_data %&gt;%\n  select(\n    customer_id,\n    active_products,\n    app_logins_frequency,\n    feature_usage_diversity,\n    monthly_transaction_count,\n    average_transaction_value,\n    total_transaction_volume,\n    transaction_frequency,\n    weekend_transaction_ratio,\n    avg_daily_transactions,\n    support_tickets_count,\n    resolved_tickets_ratio,\n    satisfaction_score,\n    nps_score,\n    churn_probability,\n    customer_lifetime_value\n  ) %&gt;%\n  mutate(\n    average_transaction_value_raw = average_transaction_value,\n    total_transaction_volume_raw = total_transaction_volume,\n    customer_lifetime_value_raw = customer_lifetime_value,\n    support_tickets_count_raw = support_tickets_count,\n    average_transaction_value = log1p(average_transaction_value),\n    total_transaction_volume = log1p(total_transaction_volume),\n    customer_lifetime_value = log1p(customer_lifetime_value),\n    support_tickets_count = log1p(support_tickets_count)\n  ) %&gt;%\n  drop_na()\n\nset.seed(1234)\n\ncluster_sample &lt;- cluster_input %&gt;%\n  slice_sample(n = 3000)\n\ncluster_scaled &lt;- scale(cluster_sample %&gt;% select(\n  active_products,\n  app_logins_frequency,\n  feature_usage_diversity,\n  monthly_transaction_count,\n  average_transaction_value,\n  total_transaction_volume,\n  transaction_frequency,\n  weekend_transaction_ratio,\n  avg_daily_transactions,\n  support_tickets_count,\n  resolved_tickets_ratio,\n  satisfaction_score,\n  nps_score,\n  churn_probability,\n  customer_lifetime_value\n))\n\nkm_res &lt;- kmeans(cluster_scaled, centers = 4, nstart = 25)\n\nclustered_df &lt;- cluster_sample %&gt;%\n  mutate(cluster = factor(km_res$cluster))"
+  },
+  {
+    "objectID": "Prototype/Cluster.html#pca-cluster-map",
+    "href": "Prototype/Cluster.html#pca-cluster-map",
+    "title": "Cluster Analysis",
+    "section": "PCA cluster map",
+    "text": "PCA cluster map\n\nfviz_cluster(km_res, data = cluster_sample)\n\n\n\n\n\n\n\nclustered_sample_df &lt;- cluster_input[sample_idx, ] %&gt;%\n  mutate(cluster = factor(km_res$cluster))"
+  },
+  {
+    "objectID": "Prototype/Cluster.html#cluster-summary-table",
+    "href": "Prototype/Cluster.html#cluster-summary-table",
+    "title": "Cluster Analysis",
+    "section": "Cluster summary table",
+    "text": "Cluster summary table\n\ncluster_summary &lt;- clustered_df %&gt;%\n  group_by(cluster) %&gt;%\n  summarise(\n    n = n(),\n    active_products = mean(active_products, na.rm = TRUE),\n    monthly_transaction_count = mean(monthly_transaction_count, na.rm = TRUE),\n    total_transaction_volume = mean(total_transaction_volume_raw, na.rm = TRUE),\n    satisfaction_score = mean(satisfaction_score, na.rm = TRUE),\n    churn_probability = mean(churn_probability, na.rm = TRUE),\n    customer_lifetime_value = mean(customer_lifetime_value_raw, na.rm = TRUE)\n  )\n\nDT::datatable(cluster_summary)"
+  },
+  {
+    "objectID": "Prototype/Cluster.html#cluster-profile-heatmap",
+    "href": "Prototype/Cluster.html#cluster-profile-heatmap",
+    "title": "Cluster Analysis",
+    "section": "Cluster profile heatmap",
+    "text": "Cluster profile heatmap\n\ncluster_profile &lt;- clustered_df %&gt;%\n  group_by(cluster) %&gt;%\n  summarise(\n    across(\n      c(active_products,\n        app_logins_frequency,\n        feature_usage_diversity,\n        monthly_transaction_count,\n        transaction_frequency,\n        avg_daily_transactions,\n        satisfaction_score,\n        nps_score,\n        churn_probability,\n        customer_lifetime_value),\n      mean\n    )\n  ) %&gt;%\n  pivot_longer(-cluster, names_to = \"metric\", values_to = \"value\")\n\nggplot(cluster_profile, aes(x = cluster, y = metric, fill = value)) +\n  geom_tile() +\n  labs(\n    title = \"Cluster Profile Heatmap\",\n    x = \"Cluster\",\n    y = \"Metric\"\n  ) +\n  theme_minimal()"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
     "objectID": "Prototype/EDA_CDA.html",
     "href": "Prototype/EDA_CDA.html",
     "title": "Exploratory Data Analysis & Confirmatory Data Analysis",
@@ -252,193 +469,102 @@
     "text": "4.12 Churn_probability VS Average login frequency\n\n\nCode\np23 &lt;- ggbarstats(customer, app_logins_group, churn_group, type=\"parametric\", title = \"Parametric\")\np24 &lt;- ggbarstats(customer, app_logins_group, churn_group, type=\"nonparametric\",title = \"Non-parametric\")\np23/p24"
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "Prototype/EDA_CDA.html#summary-tab",
+    "href": "Prototype/EDA_CDA.html#summary-tab",
+    "title": "Exploratory Data Analysis & Confirmatory Data Analysis",
+    "section": "5.1 Summary tab",
+    "text": "5.1 Summary tab\nThe Summary page provides a high-level overview of the customer dataset and key business metrics. It allows users to quickly understand the overall status of the customer base before exploring detailed analysis.\n\nAt the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These KPIs help decision-makers quickly assess the overall performance of the fintech platform.\nBelow the KPI section, several charts provide an overview of customer characteristics and behaviors. These visualizations provide a quick understanding of the customer base and highlight patterns that may require further investigation."
+  },
+  {
+    "objectID": "Prototype/EDA_CDA.html#exploration-tab",
+    "href": "Prototype/EDA_CDA.html#exploration-tab",
+    "title": "Exploratory Data Analysis & Confirmatory Data Analysis",
+    "section": "5.2 Exploration tab",
+    "text": "5.2 Exploration tab\nThe Exploration page allows users to perform Exploratory Data Analysis (EDA) by dynamically selecting variables and visualization types and the confirmatory Data Analysis page allows users to statistically validate relationships between variables. This page helps users explore relationships between different customer attributes.\n\n5.2.1 Customer overview tab\nThe main goal of this page is to allow users to interactively explore customer characteristics and distributions.\n\nAt the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These metrics provide quick insights into customer demographics and risk levels.\n\nVariable Selection\nThere are a filter bar that users can choose X and Y variable type whether they want categorical or numerical variable. After select type of variable user can select which variable in that type that they want to discover the relationship in the Select X/Y Variable filter. User click Submit botton to display in the visualization.\nThe visualization will be consisted of 4 possible pairs of x and y variable type. The visualization will shown in different plot as shown in table below\n\n\n\nX Variable Type\nY Variable Type\nThe Visualization\n\n\n\n\nNumerical\nNumerical\nScatter plot\n\n\nNumerical\nCategorical\nBox plot\n\n\nCategorical\nNumerical\nBox plot\n\n\nCategorical\nCategorical\nHeatmap\n\n\n\nThis allows users to explore different relationship between all variables and flexibility helps users view the data from different perspectives\n\n\nExport Option\nThis allows users to easily share findings with stakeholders.\n\n\nGeographic Distribution\nA map visualization displays the geographical distribution of customers across regions, helping identify areas with higher customer concentration.\n\n\n\n5.2.2 Transaction behavior tab\nThe Transaction Behavior tab allows users to analyze customer transaction patterns over time. This page focuses on understanding how different customer segments perform in terms of transaction activity and transaction value.\nBy allowing users to filter the data based on customer value segments, time periods, and transaction types, this page helps identify behavioral patterns and usage trends within the fintech platform.\n\n\nCustomer Lifetime Value Selection\nUsers can select a Customer Lifetime Value (CLV) segment from the dropdown menu. This filter allows users to analyze how transaction behavior differs across customer value tiers. For example, higher-value customers may show higher transaction frequency or larger transaction amounts.\n\n\nMonth Selection\nUsers can select the month or time period of transactions to focus on specific periods of activity.\n\n\nTransaction Type Selection\nUsers can filter the data based on type of transaction, such as:\n\nTransfer\nPayment\nWithdrawal\nDeposit\n\nThis feature helps users understand which types of financial activities are most common among customers.\nThe results are displayed using two line graphs in one plot which are transaction count line and transaction amount line. These will helps identify transaction frequency trends.\n\n\n\n5.2.3 Churn analysis tab\nThe objective of this page is to allow users to confirm statistically significant relationships between customer attributes and churn risk. Instead of only visual exploration, this page also enables hypothesis testing.\n\n\nY Variable Selection\nUsers can choose a categorical variable for the Y-axis to analyze relationships with churn groups.\nExamples include:\n\nActive products\nCustomer segments\nIncome level\nEducation level\n\n\n\nDisplay Type Selection\nUsers can choose how the results are displayed whether they want to see data in count or percentage value. This helps users interpret the results based on absolute numbers or proportions.\n\n\nStatistical Test Selection\nUsers can choose the statistical test type which are parametric teat or non-parametric test which determines the significance threshold used in the hypothesis test.\nThe results are displayed using stacked bar charts, showing the distribution of variables across churn probability groups."
+  },
+  {
+    "objectID": "Prototype/EDA_CDA.html#cluster-analysis-tab",
+    "href": "Prototype/EDA_CDA.html#cluster-analysis-tab",
+    "title": "Exploratory Data Analysis & Confirmatory Data Analysis",
+    "section": "5.3 Cluster Analysis tab",
+    "text": "5.3 Cluster Analysis tab\nThe Cluster Analysis tab allows users to explore customer segmentation using clustering techniques. The objective of this page is to identify groups of customers with similar characteristics or behaviors. By understanding these segments, businesses can develop more targeted marketing strategies and improve customer engagement.\n\n\nNumber of Clusters Selection\nUsers can select the number of clusters (k) from a slide bar. This feature allows users to experiment with different segmentation levels.\nThe clustering results are displayed using a scatter plot visualization, where each point represents a customer and colors represent different clusters."
+  },
+  {
+    "objectID": "Prototype/EDA_CDA.html#decision-tree-tab",
+    "href": "Prototype/EDA_CDA.html#decision-tree-tab",
+    "title": "Exploratory Data Analysis & Confirmatory Data Analysis",
+    "section": "5.4 Decision tree tab",
+    "text": "5.4 Decision tree tab\nThe Decision tree tab is designed to identify the key factors that influence customer churn probability. This page uses a decision tree model to analyze relationships between customer attributes and churn risk.\n\nThe main output of this page is a decision tree diagram that illustrates how customers are classified into different churn probability groups based on their characteristics.\nEach branch of the tree represents a decision rule based on a specific variable, while each node represents a split in the data that separates customers into different groups.\nThis visualization helps users easily interpret how different customer attributes influence churn risk."
+  },
+  {
+    "objectID": "Shinyapp/user_guide.html",
+    "href": "Shinyapp/user_guide.html",
+    "title": "User guide",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "Step 1: User click Summary from the left sidebar menu.\nStep 2: The dashboard will automatically display overall customer churn indicators, key insights, and summary visualisations.\nStep 3: User can hover over each interactive chart to view detailed values such as average churn probability and customer count.\n\n\n\nThe result will be divided into 4 sections which are KPI Cards, Key Insight, Main Insight Charts, and Supporting Insight Charts.\n\n\n\nThe KPI cards provide a quick overview of the overall customer churn situation.\n\n\n\n\n\n\n\nKPI Card\nDescription\n\n\n\n\nTotal Customers\nShows the total number of customers in the dataset.\n\n\nTotal Transactions\nShows the total transaction volume of all customers.\n\n\nAvg Churn Probability\nShows the average churn probability across all customers.\n\n\nHigh Risk Customers\nShows the number of customers whose churn risk is classified as High.\n\n\n\n\n\n\n\nThis section automatically highlights the most important churn patterns found in the dataset.\n\n\n\n\n\n\n\nInsight Type\nDescription\n\n\n\n\nHighest-risk combination\nShows which combination of CLV segment and app engagement level has the highest average churn risk.\n\n\nTop customer segment\nShows which customer segment has the highest average churn probability.\n\n\n\n\n\n\n\nThe main insight charts focus on the overall churn pattern and the highest-risk customer groups.\n\n\n\n\n\n\n\nChart\nDescription\n\n\n\n\nChurn Risk Heatmap by CLV Segment and App Engagement\nShows the average churn probability across combinations of CLV segment and app engagement group. Darker color indicates higher churn risk.\n\n\nOverall Churn Risk Distribution\nShows the overall distribution of churn probability for all customers. A dashed vertical line indicates the average churn probability.\n\n\n\n\n\n\n\nThe supporting insight charts provide additional breakdowns of churn risk from different perspectives.\n\n\n\n\n\n\n\nChart\nDescription\n\n\n\n\nAverage Churn Probability by CLV Segment\nShows the average churn probability for each customer lifetime value segment.\n\n\nTop High-Risk Customer Segments\nShows the top customer segments with the highest average churn probability.\n\n\nEngagement vs. Churn Risk (App Logins)\nShows how average churn probability changes across different app login frequency groups such as Rarely, Often, and Always."
   },
   {
-    "objectID": "Prototype/Cluster.html",
-    "href": "Prototype/Cluster.html",
-    "title": "Cluster Analysis",
+    "objectID": "Shinyapp/user_guide.html#kpi-cards",
+    "href": "Shinyapp/user_guide.html#kpi-cards",
+    "title": "User guide",
     "section": "",
-    "text": "pacman::p_load(\n  tidyverse,\n  lubridate,\n  factoextra,\n  plotly,\n  scales,\n  cluster,\n  DT,\n  corrplot,\n  shiny\n)\n\n\ncustomer_data &lt;- read_csv(\"data/customer_data.csv\") \n\nRows: 48723 Columns: 54\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (13): gender, location, income_bracket, occupation, education_level, ma...\ndbl  (29): customer_id, age, household_size, active_products, app_logins_fre...\nlgl   (7): savings_account, credit_card, personal_loan, investment_account, ...\ndate  (5): first_tx, last_tx, last_survey_date, last_transaction_date, first...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+    "text": "The KPI cards provide a quick overview of the overall customer churn situation.\n\n\n\n\n\n\n\nKPI Card\nDescription\n\n\n\n\nTotal Customers\nShows the total number of customers in the dataset.\n\n\nTotal Transactions\nShows the total transaction volume of all customers.\n\n\nAvg Churn Probability\nShows the average churn probability across all customers.\n\n\nHigh Risk Customers\nShows the number of customers whose churn risk is classified as High."
   },
   {
-    "objectID": "Prototype/Cluster.html#choosing-number-of-clusters",
-    "href": "Prototype/Cluster.html#choosing-number-of-clusters",
-    "title": "Cluster Analysis",
-    "section": "Choosing number of clusters",
-    "text": "Choosing number of clusters\n\nset.seed(1234)\n\nsample_n &lt;- 3000\nsample_idx &lt;- sample(seq_len(nrow(cluster_scaled)), sample_n)\n\ncluster_sample &lt;- cluster_scaled[sample_idx, ]\n\nfviz_nbclust(cluster_sample, kmeans, method = \"wss\", k.max = 8)\n\n\n\n\n\n\n\nfviz_nbclust(cluster_sample, kmeans, method = \"silhouette\", k.max = 8)"
-  },
-  {
-    "objectID": "Prototype/Cluster.html#k-means",
-    "href": "Prototype/Cluster.html#k-means",
-    "title": "Cluster Analysis",
-    "section": "K-means",
-    "text": "K-means\n\ncluster_input &lt;- customer_data %&gt;%\n  select(\n    customer_id,\n    active_products,\n    app_logins_frequency,\n    feature_usage_diversity,\n    monthly_transaction_count,\n    average_transaction_value,\n    total_transaction_volume,\n    transaction_frequency,\n    weekend_transaction_ratio,\n    avg_daily_transactions,\n    support_tickets_count,\n    resolved_tickets_ratio,\n    satisfaction_score,\n    nps_score,\n    churn_probability,\n    customer_lifetime_value\n  ) %&gt;%\n  mutate(\n    average_transaction_value_raw = average_transaction_value,\n    total_transaction_volume_raw = total_transaction_volume,\n    customer_lifetime_value_raw = customer_lifetime_value,\n    support_tickets_count_raw = support_tickets_count,\n    average_transaction_value = log1p(average_transaction_value),\n    total_transaction_volume = log1p(total_transaction_volume),\n    customer_lifetime_value = log1p(customer_lifetime_value),\n    support_tickets_count = log1p(support_tickets_count)\n  ) %&gt;%\n  drop_na()\n\nset.seed(1234)\n\ncluster_sample &lt;- cluster_input %&gt;%\n  slice_sample(n = 3000)\n\ncluster_scaled &lt;- scale(cluster_sample %&gt;% select(\n  active_products,\n  app_logins_frequency,\n  feature_usage_diversity,\n  monthly_transaction_count,\n  average_transaction_value,\n  total_transaction_volume,\n  transaction_frequency,\n  weekend_transaction_ratio,\n  avg_daily_transactions,\n  support_tickets_count,\n  resolved_tickets_ratio,\n  satisfaction_score,\n  nps_score,\n  churn_probability,\n  customer_lifetime_value\n))\n\nkm_res &lt;- kmeans(cluster_scaled, centers = 4, nstart = 25)\n\nclustered_df &lt;- cluster_sample %&gt;%\n  mutate(cluster = factor(km_res$cluster))"
-  },
-  {
-    "objectID": "Prototype/Cluster.html#pca-cluster-map",
-    "href": "Prototype/Cluster.html#pca-cluster-map",
-    "title": "Cluster Analysis",
-    "section": "PCA cluster map",
-    "text": "PCA cluster map\n\nfviz_cluster(km_res, data = cluster_sample)\n\n\n\n\n\n\n\nclustered_sample_df &lt;- cluster_input[sample_idx, ] %&gt;%\n  mutate(cluster = factor(km_res$cluster))"
-  },
-  {
-    "objectID": "Prototype/Cluster.html#cluster-summary-table",
-    "href": "Prototype/Cluster.html#cluster-summary-table",
-    "title": "Cluster Analysis",
-    "section": "Cluster summary table",
-    "text": "Cluster summary table\n\ncluster_summary &lt;- clustered_df %&gt;%\n  group_by(cluster) %&gt;%\n  summarise(\n    n = n(),\n    active_products = mean(active_products, na.rm = TRUE),\n    monthly_transaction_count = mean(monthly_transaction_count, na.rm = TRUE),\n    total_transaction_volume = mean(total_transaction_volume_raw, na.rm = TRUE),\n    satisfaction_score = mean(satisfaction_score, na.rm = TRUE),\n    churn_probability = mean(churn_probability, na.rm = TRUE),\n    customer_lifetime_value = mean(customer_lifetime_value_raw, na.rm = TRUE)\n  )\n\nDT::datatable(cluster_summary)"
-  },
-  {
-    "objectID": "Prototype/Cluster.html#cluster-profile-heatmap",
-    "href": "Prototype/Cluster.html#cluster-profile-heatmap",
-    "title": "Cluster Analysis",
-    "section": "Cluster profile heatmap",
-    "text": "Cluster profile heatmap\n\ncluster_profile &lt;- clustered_df %&gt;%\n  group_by(cluster) %&gt;%\n  summarise(\n    across(\n      c(active_products,\n        app_logins_frequency,\n        feature_usage_diversity,\n        monthly_transaction_count,\n        transaction_frequency,\n        avg_daily_transactions,\n        satisfaction_score,\n        nps_score,\n        churn_probability,\n        customer_lifetime_value),\n      mean\n    )\n  ) %&gt;%\n  pivot_longer(-cluster, names_to = \"metric\", values_to = \"value\")\n\nggplot(cluster_profile, aes(x = cluster, y = metric, fill = value)) +\n  geom_tile() +\n  labs(\n    title = \"Cluster Profile Heatmap\",\n    x = \"Cluster\",\n    y = \"Metric\"\n  ) +\n  theme_minimal()"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html",
-    "href": "Prototype/Predict_Model.html",
-    "title": "Predict Model",
+    "objectID": "Shinyapp/user_guide.html#key-insight",
+    "href": "Shinyapp/user_guide.html#key-insight",
+    "title": "User guide",
     "section": "",
-    "text": "pacman::p_load(tidyverse, rpart, rpart.plot, sparkline, visNetwork, \n               caret, ranger, patchwork)\n\n\ncustomer_data &lt;- read_csv(\"data/customer_data.csv\") \n\nRows: 48723 Columns: 54\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (13): gender, location, income_bracket, occupation, education_level, ma...\ndbl  (29): customer_id, age, household_size, active_products, app_logins_fre...\nlgl   (7): savings_account, credit_card, personal_loan, investment_account, ...\ndate  (5): first_tx, last_tx, last_survey_date, last_transaction_date, first...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message."
+    "text": "This section automatically highlights the most important churn patterns found in the dataset.\n\n\n\n\n\n\n\nInsight Type\nDescription\n\n\n\n\nHighest-risk combination\nShows which combination of CLV segment and app engagement level has the highest average churn risk.\n\n\nTop customer segment\nShows which customer segment has the highest average churn probability."
   },
   {
-    "objectID": "Prototype/Predict_Model.html#check-for-duplicates",
-    "href": "Prototype/Predict_Model.html#check-for-duplicates",
-    "title": "Predict Model",
-    "section": "Check for duplicates",
-    "text": "Check for duplicates\n\nduplicate_count &lt;- sum(duplicated(customer_data))\n\nif (duplicate_count &gt; 0) {\n  message(\"There are \", duplicate_count, \" duplicate rows in the dataset.\")\n} else {\n  message(\"There are no duplicate rows in the dataset.\")\n}\n\nThere are no duplicate rows in the dataset.\n\n\nA quick check for duplicate records confirms that there are no duplicated customer IDs in the customer dataset."
+    "objectID": "Shinyapp/user_guide.html#main-insight-charts",
+    "href": "Shinyapp/user_guide.html#main-insight-charts",
+    "title": "User guide",
+    "section": "",
+    "text": "The main insight charts focus on the overall churn pattern and the highest-risk customer groups.\n\n\n\n\n\n\n\nChart\nDescription\n\n\n\n\nChurn Risk Heatmap by CLV Segment and App Engagement\nShows the average churn probability across combinations of CLV segment and app engagement group. Darker color indicates higher churn risk.\n\n\nOverall Churn Risk Distribution\nShows the overall distribution of churn probability for all customers. A dashed vertical line indicates the average churn probability."
   },
   {
-    "objectID": "Prototype/Predict_Model.html#check-and-handle-missing-value",
-    "href": "Prototype/Predict_Model.html#check-and-handle-missing-value",
-    "title": "Predict Model",
-    "section": "check and handle missing value",
-    "text": "check and handle missing value\n\nna_summary &lt;- data.frame(\n  column_name = names(customer_data),\n  na_count = sapply(customer_data, function(x) sum(is.na(x))),\n  na_percentage = sapply(customer_data, function(x) mean(is.na(x)) * 100)\n)\n\nna_summary %&gt;%\n  filter(na_count &gt; 0)\n\n                                      column_name na_count na_percentage\ncredit_utilization_ratio credit_utilization_ratio    18263      37.48332\nfeature_requests                 feature_requests    16115      33.07473\ncomplaint_topics                 complaint_topics    24346      49.96819\n\n\nThe variables credit_utilization_ratio and feature_requests were removed from the dataset due to their relatively high proportion of missing values. For the variable complaint_topics, missing values were interpreted as cases where customers did not report any specific complaints. Therefore, these missing entries were recoded as “No complaint”.\n\ncustomer_data &lt;- customer_data %&gt;% select(-credit_utilization_ratio, -feature_requests)\ncustomer_data &lt;- customer_data %&gt;%\n  mutate(\n    complaint_topics = ifelse(is.na(complaint_topics),\n                              \"No complaint\",\n                              complaint_topics)\n  )"
+    "objectID": "Shinyapp/user_guide.html#supporting-insight-charts",
+    "href": "Shinyapp/user_guide.html#supporting-insight-charts",
+    "title": "User guide",
+    "section": "",
+    "text": "The supporting insight charts provide additional breakdowns of churn risk from different perspectives.\n\n\n\n\n\n\n\nChart\nDescription\n\n\n\n\nAverage Churn Probability by CLV Segment\nShows the average churn probability for each customer lifetime value segment.\n\n\nTop High-Risk Customer Segments\nShows the top customer segments with the highest average churn probability.\n\n\nEngagement vs. Churn Risk (App Logins)\nShows how average churn probability changes across different app login frequency groups such as Rarely, Often, and Always."
   },
   {
-    "objectID": "Prototype/Predict_Model.html#confirm-data-type-of-target-variable",
-    "href": "Prototype/Predict_Model.html#confirm-data-type-of-target-variable",
-    "title": "Predict Model",
-    "section": "Confirm data type of target variable",
-    "text": "Confirm data type of target variable\nThe target variable churn_probability was checked before modeling. The summary statistics indicate that the variable ranges from 0.114 to 0.501 and is stored as a numeric type, confirming that a regression tree is appropriate for this analysis.\n\nsummary(customer_data$churn_probability)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n 0.1143  0.3029  0.3540  0.3429  0.3927  0.5006 \n\nclass(customer_data$churn_probability)\n\n[1] \"numeric\""
+    "objectID": "Shinyapp/user_guide.html#customer-overview",
+    "href": "Shinyapp/user_guide.html#customer-overview",
+    "title": "User guide",
+    "section": "1. Customer Overview",
+    "text": "1. Customer Overview\nStep 1: Select X-axis data Type ( Categorical or Numerical )\nStep 2: User must choose which X variable to be analyze ( The shown variable will depend on the data type that user choose)\nStep 3: Select Y-axis data Type ( Categorical or Numerical )\nStep 4: User must choose which Y variable to be analyze ( The shown variable will depend on the data type that user choose)\nStep 5: User click update plot\n\n\nOutput Result\nThe result is depending on whether th chosen variables are numerical or categorical\n\n\n\n\n\n\n\nVariable Type\nResult\n\n\n\n\nX = Categorical\nY = Categorical\nHeatmap\n\n\n\nX = Categorical\nY = Numerical\nBox plot\n\n\n\nX = Numerical\nY = Numerical\nScatter plot\n\n\n\nX = Numerical\nY = Categorical\nBox plot"
   },
   {
-    "objectID": "Prototype/Predict_Model.html#convert-character-variables-to-factors",
-    "href": "Prototype/Predict_Model.html#convert-character-variables-to-factors",
-    "title": "Predict Model",
-    "section": "Convert Character Variables to Factors",
-    "text": "Convert Character Variables to Factors\nAll character variables were converted into factor type so that they can be correctly treated as categorical variables in the decision tree model.\n\ncustomer_data &lt;- customer_data %&gt;%\n  mutate(across(where(is.character), as.factor))"
+    "objectID": "Shinyapp/user_guide.html#transaction-behavior",
+    "href": "Shinyapp/user_guide.html#transaction-behavior",
+    "title": "User guide",
+    "section": "2. Transaction Behavior",
+    "text": "2. Transaction Behavior\nStep 1: Select customer lifetime value ( Gold, Platinum, Silver, Bronze )\nStep 2: Select transaction ( Transfer, Withdrawal , Payment, Deposit )\nStep 3: User can choose transaction period\n\n\nOutput Result\nThe result will show transaction count in line chart and transaction amount in dash line chart."
   },
   {
-    "objectID": "Prototype/Predict_Model.html#remove-unnecessary-attributes",
-    "href": "Prototype/Predict_Model.html#remove-unnecessary-attributes",
-    "title": "Predict Model",
-    "section": "Remove unnecessary attributes",
-    "text": "Remove unnecessary attributes\nSeveral attributes were removed during the preprocessing stage to improve model reliability. First, customer_id was removed because it represents a unique identifier for each customer. Including such variables in the model would not contribute to predictive power and may lead to overfitting.\nIn addition, first_tx and first_transaction_date were identified as duplicated attributes describing the customer’s first transaction date. Since the first transaction timing is considered to have limited interpretability for predicting churn behavior in the current analysis, these variables were removed.\nSimilarly, last_tx and last_transaction_date share the same definition of the customer’s most recent transaction date. However, inconsistencies were observed between the two columns. To avoid potential misuse of ambiguous information, both variables were excluded from the modeling dataset.\nThe variable last_survey_date was removed from the model because its date format is incompatible with decision tree algorithms. Furthermore, initial assessments indicated that the specific date of the last survey has no direct correlation with churn probability, making it a redundant feature for this analysis.\n\ncustomer_data &lt;- customer_data %&gt;%\n  select(\n    -customer_id,\n    -first_tx,\n    -first_transaction_date,\n    -last_tx,\n    -last_transaction_date,\n    -last_survey_date\n  )\n\n\nglimpse(customer_data)\n\nRows: 48,723\nColumns: 46\n$ age                        &lt;dbl&gt; 44, 44, 45, 45, 44, 45, 44, 44, 45, 44, 44,…\n$ gender                     &lt;fct&gt; Male, Male, Male, Male, Female, Female, Mal…\n$ location                   &lt;fct&gt; \"Pereira, Risaralda\", \"Cali, Valle del Cauc…\n$ income_bracket             &lt;fct&gt; Very High, Medium, High, High, Medium, Medi…\n$ occupation                 &lt;fct&gt; Engineer, Construction Worker, Construction…\n$ education_level            &lt;fct&gt; Master, Bachelor, Bachelor, High School, Ba…\n$ marital_status             &lt;fct&gt; Married, Married, Married, Single, Married,…\n$ household_size             &lt;dbl&gt; 5, 2, 4, 2, 3, 4, 4, 3, 1, 3, 5, 3, 3, 7, 3…\n$ acquisition_channel        &lt;fct&gt; Partnership, Paid Ad, Paid Ad, Referral, Pa…\n$ customer_segment           &lt;fct&gt; occasional, regular, inactive, inactive, po…\n$ savings_account            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…\n$ credit_card                &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE…\n$ personal_loan              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…\n$ investment_account         &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALS…\n$ insurance_product          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…\n$ active_products            &lt;dbl&gt; 1, 5, 3, 2, 1, 1, 1, 4, 2, 3, 1, 5, 3, 1, 1…\n$ app_logins_frequency       &lt;dbl&gt; 15, 30, 4, 15, 19, 15, 44, 22, 7, 11, 7, 30…\n$ feature_usage_diversity    &lt;dbl&gt; 3, 0, 4, 4, 1, 4, 6, 1, 1, 6, 3, 1, 2, 1, 3…\n$ bill_payment_user          &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE,…\n$ auto_savings_enabled       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FA…\n$ international_transactions &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0…\n$ failed_transactions        &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0…\n$ tx_count                   &lt;dbl&gt; 76, 10, 10, 23, 18, 15, 24, 45, 134, 13, 18…\n$ avg_tx_value               &lt;dbl&gt; 1679872.4, 5445810.0, 640335.0, 660180.4, 1…\n$ total_tx_volume            &lt;dbl&gt; 127670300, 54458100, 6403350, 15184150, 262…\n$ base_satisfaction          &lt;dbl&gt; 9.213372, 6.073093, 8.198643, 7.529577, 6.6…\n$ tx_satisfaction            &lt;dbl&gt; 0.380, 0.050, 0.050, 0.115, 0.090, 0.075, 0…\n$ product_satisfaction       &lt;dbl&gt; 0.6, 0.2, 0.6, 0.4, 0.4, 0.6, 0.4, 0.4, 0.6…\n$ satisfaction_score         &lt;dbl&gt; 5, 3, 4, 4, 3, 4, 4, 4, 5, 4, 4, 5, 4, 3, 4…\n$ nps_score                  &lt;dbl&gt; -7, -46, -29, -31, -47, -29, -34, -36, -4, …\n$ support_tickets_count      &lt;dbl&gt; 1, 1, 0, 2, 2, 1, 1, 0, 2, 0, 0, 2, 3, 1, 0…\n$ resolved_tickets_ratio     &lt;dbl&gt; 0.0000000, 1.0000000, 0.0000000, 0.5000000,…\n$ app_store_rating           &lt;dbl&gt; 3.5, 4.0, 5.0, 4.5, 4.0, 4.0, 5.0, 4.5, 4.5…\n$ feedback_sentiment         &lt;fct&gt; Neutral, Positive, Positive, Positive, Posi…\n$ complaint_topics           &lt;fct&gt; No complaint, No complaint, No complaint, N…\n$ clv_segment                &lt;fct&gt; Gold, Bronze, Gold, Bronze, Gold, Bronze, B…\n$ monthly_transaction_count  &lt;dbl&gt; 1.428571, 1.571429, 2.500000, 1.555556, 2.1…\n$ average_transaction_value  &lt;dbl&gt; 6054025.0, 2127413.6, 3575915.0, 1513353.6,…\n$ total_transaction_volume   &lt;dbl&gt; 60540250, 23401550, 35759150, 21186950, 116…\n$ transaction_frequency      &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ preferred_transaction_type &lt;fct&gt; Transfer, Transfer, Transfer, Transfer, Pay…\n$ weekend_transaction_ratio  &lt;dbl&gt; 0.30000000, 0.18181818, 0.30000000, 0.14285…\n$ avg_daily_transactions     &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ customer_tenure            &lt;dbl&gt; 11.633333, 11.500000, 8.766667, 10.733333, …\n$ churn_probability          &lt;dbl&gt; 0.3622688, 0.1817896, 0.3212651, 0.3366287,…\n$ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 35978105, 3…"
+    "objectID": "Shinyapp/user_guide.html#churn-analysis",
+    "href": "Shinyapp/user_guide.html#churn-analysis",
+    "title": "User guide",
+    "section": "3. Churn Analysis",
+    "text": "3. Churn Analysis\nStep 1: User must choose which X variable to be analyze\nStep 2: Select statistical test ( Parametric, Nonparametric, Robust, Bayes )\nStep 3: Select confident level ( 95%, 99% )\nStep 4: Select display type ( Count, Percent )\nStep 5: User click update plot\n\n\nOutput Result\nThe result will be divided into 2 tabs which are Statistical Test and VCD Mosaic. The graph shows statistical relationship between churn probability and the variable that user choose.\n\n\n\n\n\n\n\nStatistical Test\nVCD Mosaic"
   },
   {
-    "objectID": "Prototype/Predict_Model.html#export-rds-file-for-shiny",
-    "href": "Prototype/Predict_Model.html#export-rds-file-for-shiny",
-    "title": "Predict Model",
-    "section": "Export RDS file for shiny",
-    "text": "Export RDS file for shiny\n\nwrite_rds(customer_data, \"data/customer_data_clean.rds\")\n\n\ncustomer_data_clean &lt;- read_rds(\"data/customer_data_clean.rds\")\nglimpse(customer_data_clean)\n\nRows: 48,723\nColumns: 46\n$ age                        &lt;dbl&gt; 44, 44, 45, 45, 44, 45, 44, 44, 45, 44, 44,…\n$ gender                     &lt;fct&gt; Male, Male, Male, Male, Female, Female, Mal…\n$ location                   &lt;fct&gt; \"Pereira, Risaralda\", \"Cali, Valle del Cauc…\n$ income_bracket             &lt;fct&gt; Very High, Medium, High, High, Medium, Medi…\n$ occupation                 &lt;fct&gt; Engineer, Construction Worker, Construction…\n$ education_level            &lt;fct&gt; Master, Bachelor, Bachelor, High School, Ba…\n$ marital_status             &lt;fct&gt; Married, Married, Married, Single, Married,…\n$ household_size             &lt;dbl&gt; 5, 2, 4, 2, 3, 4, 4, 3, 1, 3, 5, 3, 3, 7, 3…\n$ acquisition_channel        &lt;fct&gt; Partnership, Paid Ad, Paid Ad, Referral, Pa…\n$ customer_segment           &lt;fct&gt; occasional, regular, inactive, inactive, po…\n$ savings_account            &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, T…\n$ credit_card                &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE…\n$ personal_loan              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…\n$ investment_account         &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, TRUE, FALS…\n$ insurance_product          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, FAL…\n$ active_products            &lt;dbl&gt; 1, 5, 3, 2, 1, 1, 1, 4, 2, 3, 1, 5, 3, 1, 1…\n$ app_logins_frequency       &lt;dbl&gt; 15, 30, 4, 15, 19, 15, 44, 22, 7, 11, 7, 30…\n$ feature_usage_diversity    &lt;dbl&gt; 3, 0, 4, 4, 1, 4, 6, 1, 1, 6, 3, 1, 2, 1, 3…\n$ bill_payment_user          &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE,…\n$ auto_savings_enabled       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, FA…\n$ international_transactions &lt;dbl&gt; 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0…\n$ failed_transactions        &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0…\n$ tx_count                   &lt;dbl&gt; 76, 10, 10, 23, 18, 15, 24, 45, 134, 13, 18…\n$ avg_tx_value               &lt;dbl&gt; 1679872.4, 5445810.0, 640335.0, 660180.4, 1…\n$ total_tx_volume            &lt;dbl&gt; 127670300, 54458100, 6403350, 15184150, 262…\n$ base_satisfaction          &lt;dbl&gt; 9.213372, 6.073093, 8.198643, 7.529577, 6.6…\n$ tx_satisfaction            &lt;dbl&gt; 0.380, 0.050, 0.050, 0.115, 0.090, 0.075, 0…\n$ product_satisfaction       &lt;dbl&gt; 0.6, 0.2, 0.6, 0.4, 0.4, 0.6, 0.4, 0.4, 0.6…\n$ satisfaction_score         &lt;dbl&gt; 5, 3, 4, 4, 3, 4, 4, 4, 5, 4, 4, 5, 4, 3, 4…\n$ nps_score                  &lt;dbl&gt; -7, -46, -29, -31, -47, -29, -34, -36, -4, …\n$ support_tickets_count      &lt;dbl&gt; 1, 1, 0, 2, 2, 1, 1, 0, 2, 0, 0, 2, 3, 1, 0…\n$ resolved_tickets_ratio     &lt;dbl&gt; 0.0000000, 1.0000000, 0.0000000, 0.5000000,…\n$ app_store_rating           &lt;dbl&gt; 3.5, 4.0, 5.0, 4.5, 4.0, 4.0, 5.0, 4.5, 4.5…\n$ feedback_sentiment         &lt;fct&gt; Neutral, Positive, Positive, Positive, Posi…\n$ complaint_topics           &lt;fct&gt; No complaint, No complaint, No complaint, N…\n$ clv_segment                &lt;fct&gt; Gold, Bronze, Gold, Bronze, Gold, Bronze, B…\n$ monthly_transaction_count  &lt;dbl&gt; 1.428571, 1.571429, 2.500000, 1.555556, 2.1…\n$ average_transaction_value  &lt;dbl&gt; 6054025.0, 2127413.6, 3575915.0, 1513353.6,…\n$ total_transaction_volume   &lt;dbl&gt; 60540250, 23401550, 35759150, 21186950, 116…\n$ transaction_frequency      &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ preferred_transaction_type &lt;fct&gt; Transfer, Transfer, Transfer, Transfer, Pay…\n$ weekend_transaction_ratio  &lt;dbl&gt; 0.30000000, 0.18181818, 0.30000000, 0.14285…\n$ avg_daily_transactions     &lt;dbl&gt; 0.03076923, 0.03293413, 0.05000000, 0.04778…\n$ customer_tenure            &lt;dbl&gt; 11.633333, 11.500000, 8.766667, 10.733333, …\n$ churn_probability          &lt;dbl&gt; 0.3622688, 0.1817896, 0.3212651, 0.3366287,…\n$ customer_lifetime_value    &lt;dbl&gt; 312414808, 167022286, 19403711, 35978105, 3…"
+    "objectID": "Shinyapp/user_guide.html#decision-tree",
+    "href": "Shinyapp/user_guide.html#decision-tree",
+    "title": "User guide",
+    "section": "1. Decision tree",
+    "text": "1. Decision tree\nStep 1: User must choose at least 2 variables and up to 45 variables to be analyze in the model\nStep 2: User set model parameter\nThe table below details parameters that can be adjusted to tune the decision tree model.\n\n\n\n\n\n\n\nModel Parameter\nParameter Description\n\n\n\n\n\nControls how the dataset is divided into training and testing sets. For example, 0.8 means 80% of the data is used for training and 20% for testing.\n\n\n\nDefines the minimum number of observations required in a node before the tree can split.\n\n\n\nSets the maximum number of levels the tree can grow. Deeper trees are more flexible but may overfit.\n\n\n\nControls whether a split is worthwhile. Higher CP makes the tree simpler, lower CP allows more splits.\n\n\n\nStep 3: User click build model\n\nOutput Result\nThe result will show model performance and model visulisation.\n\nThe Model visulisation will be divided into 4 tabs which are Decision Tree, Predicted vs Actual, Feature Importance, and Scenario Prediction.\n\n\n\n\n\n\n\nModel Visulisation\nDescription\n\n\n\n\nDecision Tree\n\nThe output result show the tree diagram which user can zoom in to the wanted node and can click Rules to show condition.\n\n\n\nPredicted vs Actual\n\nCompares predicted churn probability with actual churn probability on the test dataset. Points closer to the red diagonal line indicate better prediction accuracy.\n\n\nFeature Importance\n\nShows the top 10 most important variables used in the decision tree. Higher values indicate that a variable contributes more to the model’s predictions.\n\n\nScenario Prediction\n\nStep 1: User select input scenario\nStep 2: User click Predict Scenario\n\nOutput\n\nPrediction result\nThe output will show predicted churn probability according to the input variable.\nDesision Path\nThe output will shown …."
   },
   {
-    "objectID": "Prototype/Predict_Model.html#train-test-split",
-    "href": "Prototype/Predict_Model.html#train-test-split",
-    "title": "Predict Model",
-    "section": "Train-Test Split",
-    "text": "Train-Test Split\nThe Shiny application allows users to customize the train-test split ratio. By default, the system is configured with an 80/20 split, allocating 80% of the dataset for training and the remaining 20% for testing.\n\nset.seed(1234)\n\ntrain_index &lt;- createDataPartition(\n  customer_data_clean$churn_probability,\n  p = 0.8,\n  list = FALSE\n)\n\ndf_train &lt;- customer_data_clean[train_index, ]\ndf_test  &lt;- customer_data_clean[-train_index, ]"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#build-regression-tree-function",
-    "href": "Prototype/Predict_Model.html#build-regression-tree-function",
-    "title": "Predict Model",
-    "section": "Build Regression Tree Function",
-    "text": "Build Regression Tree Function\nSince the target variable churn_probability is a continuous variable, we implemented a regression tree rather than a classification tree. In the current code, the model training function is parameterized specifically for min_split, complexity_parameter, and max_depth. Looking ahead, the Shiny application will expand this flexibility, allowing users to not only tune these parameters but also select their own set of predictors and customize the data partition ratio.\n\ntree_model &lt;- function(min_split, complexity_parameter, max_depth) {\n  rpart(\n    churn_probability ~ .,\n    data = df_train,\n    method = \"anova\",\n    control = rpart.control(\n      minsplit = min_split,\n      cp = complexity_parameter,\n      maxdepth = max_depth\n    )\n  )\n}\n\nfit_tree &lt;- tree_model(min_split = 10, complexity_parameter = 0.001, max_depth = 10\n)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#view-regression-tree",
-    "href": "Prototype/Predict_Model.html#view-regression-tree",
-    "title": "Predict Model",
-    "section": "View Regression Tree",
-    "text": "View Regression Tree\n\nvisTree(fit_tree, edgesFontSize = 14, nodesFontSize = 16, width = \"100%\")"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#predict-on-test-data",
-    "href": "Prototype/Predict_Model.html#predict-on-test-data",
-    "title": "Predict Model",
-    "section": "Predict on Test Data",
-    "text": "Predict on Test Data\n\ndf_test$pred_tree &lt;- predict(fit_tree, newdata = df_test)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data",
-    "href": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data",
-    "title": "Predict Model",
-    "section": "Predicted vs Actual on Test Data",
-    "text": "Predicted vs Actual on Test Data\nTo evaluate the predictive performance, a scatter plot of predicted versus actual churn probabilities was constructed. The strong alignment of data points along the 45-degree reference line demonstrates the high reliability of the regression tree in estimating churn risks.\n\nggplot(df_test, aes(x = churn_probability, y = pred_tree)) +\n  geom_point(alpha = 0.6) +\n  geom_abline(slope = 1, intercept = 0, color = \"red\", linewidth = 1) +\n  labs(\n    title = \"Predicted vs Actual on Test Data\",\n    x = \"Actual Churn Probability\",\n    y = \"Predicted Churn Probability\"\n  ) +\n  theme_minimal(base_size = 13)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#feature-importance-of-decision-tree",
-    "href": "Prototype/Predict_Model.html#feature-importance-of-decision-tree",
-    "title": "Predict Model",
-    "section": "Feature Importance of Decision Tree",
-    "text": "Feature Importance of Decision Tree\nWe extract the variable.importance attribute from the fit_tree model and convert it into a structured table format for easier processing. The variables are then sorted in descending order based on their importance scores, and only the top 10 most influential features are retained. This approach prevents the visualization from becoming overcrowded and ensures that the most critical drivers of the model are clearly highlighted.\n\ntree_importance &lt;- tibble(\n  Variable = names(fit_tree$variable.importance),\n  Importance = as.numeric(fit_tree$variable.importance)\n) %&gt;%\n  arrange(desc(Importance))\n\ntree_importance %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(Variable, Importance), y = Importance)) +\n  geom_col() +\n  coord_flip() +\n  labs(\n    title = \"Feature Importance of Decision Tree\",\n    x = \"Variable\",\n    y = \"Importance\"\n  ) +\n  theme_minimal(base_size = 13)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#model-performance-metrics",
-    "href": "Prototype/Predict_Model.html#model-performance-metrics",
-    "title": "Predict Model",
-    "section": "Model Performance Metrics",
-    "text": "Model Performance Metrics\nThis code segment calculates key performance metrics to evaluate the accuracy of our regression model on the testing dataset:\nRMSE (Root Mean Square Error): Measures the average magnitude of the error by taking the square root of average squared differences. It is particularly sensitive to large outliers.\nMAE (Mean Absolute Error): Represents the average absolute difference between predicted and actual values, offering a more intuitive measure of prediction error.\nR-squared (\\(R^2\\)): Calculated as the square of the correlation between predicted and actual values. It indicates the proportion of variance in churn_probability explained by the model.\nLooking forward, these performance metrics will be integrated into the Shiny application dashboard. This will allow users to monitor the model’s accuracy in real-time as they adjust parameters or update datasets.\n\nrmse_value &lt;- sqrt(mean((df_test$churn_probability - df_test$pred_tree)^2))\nmae_value  &lt;- mean(abs(df_test$churn_probability - df_test$pred_tree))\nr2_value   &lt;- cor(df_test$churn_probability, df_test$pred_tree)^2\n\ntibble(\n  Metric = c(\"RMSE\", \"MAE\", \"R-squared\"),\n  Value = round(c(rmse_value, mae_value, r2_value), 4)\n)\n\n# A tibble: 3 × 2\n  Metric     Value\n  &lt;chr&gt;      &lt;dbl&gt;\n1 RMSE      0.0138\n2 MAE       0.0108\n3 R-squared 0.958"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#train-test-split-1",
-    "href": "Prototype/Predict_Model.html#train-test-split-1",
-    "title": "Predict Model",
-    "section": "Train-Test Split",
-    "text": "Train-Test Split\nSimilar to the decision tree model, the Shiny application allows users to customize the train-test split ratio for the random forest model. By default, the current implementation also uses an 80/20 split, where 80% of the dataset is allocated to the training set and the remaining 20% is reserved for testing.\n\nset.seed(1234)\n\ntrain_index_rf &lt;- createDataPartition(\n  customer_data_clean$churn_probability,\n  p = 0.8,\n  list = FALSE\n)\n\ndf_train_rf &lt;- customer_data_clean[train_index_rf, ]\ndf_test_rf  &lt;- customer_data_clean[-train_index_rf, ]"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#build-random-forest-function",
-    "href": "Prototype/Predict_Model.html#build-random-forest-function",
-    "title": "Predict Model",
-    "section": "Build Random Forest Function",
-    "text": "Build Random Forest Function\nwe use the ranger engine through the caret framework. The current code is parameterized for the number of trees, allowing the model complexity to be adjusted. After the Shiny application will allow users to choose their own predictors, customize the train-test split ratio, and modify the number of trees interactively.\n\nrf_grid &lt;- expand.grid(\n  mtry = max(1, floor(sqrt(ncol(df_train_rf) - 1))),\n  splitrule = \"variance\",\n  min.node.size = 5\n)\n\nrf_control &lt;- trainControl(method = \"none\")\n\nrf_model &lt;- function(num_trees) {\n  train(\n    churn_probability ~ .,\n    data = df_train_rf,\n    method = \"ranger\",\n    trControl = rf_control,\n    tuneGrid = rf_grid,\n    num.trees = num_trees,\n    importance = \"impurity\"\n  )\n}\n\nfit_rf &lt;- rf_model(num_trees = 100)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#predict-on-test-data-1",
-    "href": "Prototype/Predict_Model.html#predict-on-test-data-1",
-    "title": "Predict Model",
-    "section": "Predict on Test Data",
-    "text": "Predict on Test Data\n\ndf_test_rf$pred_rf &lt;- predict(fit_rf, newdata = df_test_rf)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data-1",
-    "href": "Prototype/Predict_Model.html#predicted-vs-actual-on-test-data-1",
-    "title": "Predict Model",
-    "section": "Predicted vs Actual on Test Data",
-    "text": "Predicted vs Actual on Test Data\nTo evaluate the predictive performance, a scatter plot of predicted versus actual churn probabilities was constructed. Similar to the decision tree model, a strong concentration of points around the 45-degree reference line indicates that the random forest model is able to generate reliable estimates of churn risk.\n\nggplot(df_test_rf, aes(x = churn_probability, y = pred_rf)) +\n  geom_point(alpha = 0.6) +\n  geom_abline(slope = 1, intercept = 0, color = \"red\", linewidth = 1) +\n  labs(\n    title = \"Predicted vs Actual on Test Data\",\n    x = \"Actual Churn Probability\",\n    y = \"Predicted Churn Probability\"\n  ) +\n  theme_minimal(base_size = 13)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#feature-importance-of-random-forest",
-    "href": "Prototype/Predict_Model.html#feature-importance-of-random-forest",
-    "title": "Predict Model",
-    "section": "Feature Importance of Random Forest",
-    "text": "Feature Importance of Random Forest\nWe extract the variable importance scores from the fitted random forest model using the varImp() function and convert them into a structured table format for easier interpretation. The variables are then sorted in descending order according to their importance scores, and only the top 10 most influential features are displayed.\n\nrf_importance &lt;- varImp(fit_rf)$importance %&gt;%\n  tibble::rownames_to_column(\"Variable\") %&gt;%\n  rename(Importance = Overall) %&gt;%\n  arrange(desc(Importance))\n\nrf_importance %&gt;%\n  slice_head(n = 10) %&gt;%\n  ggplot(aes(x = reorder(Variable, Importance), y = Importance)) +\n  geom_col() +\n  coord_flip() +\n  labs(\n    title = \"Feature Importance of Random Forest\",\n    x = \"Variable\",\n    y = \"Importance\"\n  ) +\n  theme_minimal(base_size = 13)"
-  },
-  {
-    "objectID": "Prototype/Predict_Model.html#model-performance-metrics-1",
-    "href": "Prototype/Predict_Model.html#model-performance-metrics-1",
-    "title": "Predict Model",
-    "section": "Model Performance Metrics",
-    "text": "Model Performance Metrics\nThe concept is same as decision tree metrics.\n\nrmse_value_rf &lt;- sqrt(mean((df_test_rf$churn_probability - df_test_rf$pred_rf)^2))\nmae_value_rf  &lt;- mean(abs(df_test_rf$churn_probability - df_test_rf$pred_rf))\nr2_value_rf   &lt;- cor(df_test_rf$churn_probability, df_test_rf$pred_rf)^2\n\ntibble(\n  Metric = c(\"RMSE\", \"MAE\", \"R-squared\"),\n  Value = round(c(rmse_value_rf, mae_value_rf, r2_value_rf), 4)\n)\n\n# A tibble: 3 × 2\n  Metric     Value\n  &lt;chr&gt;      &lt;dbl&gt;\n1 RMSE      0.0316\n2 MAE       0.0243\n3 R-squared 0.909"
+    "objectID": "Shinyapp/user_guide.html#random-forest",
+    "href": "Shinyapp/user_guide.html#random-forest",
+    "title": "User guide",
+    "section": "2. Random Forest",
+    "text": "2. Random Forest\nStep 1: User must choose at least 2 variables and up to 45 variables to be analyze in the model\nStep 2: User set model parameter\nThe table below details parameters that can be adjusted to tune the random forest model.\n\n\n\n\n\n\n\nModel Parameter\nParameter Description\n\n\n\n\n\nControls how the dataset is divided into training and testing sets. For example, 0.8 means 80% of the data is used for training and 20% for testing.\n\n\n\nDefines how many trees are built in the random forest model.\n\n\n\nStep 3: User click build model\n\nOutput Result\nThe result will show model performance and model visulisation.\n\nThe Model visulisation will be divided into 3 tabs which are Predicted vs Actual, Feature Importance, and Scenario Prediction.\n\n\n\n\n\n\n\nModel Visulisation\nDescription\n\n\n\n\n\nCompares predicted churn probability with actual churn probability on the test dataset. Points closer to the red diagonal line indicate better prediction accuracy.\n\n\n\nShows the top 10 most important variables used in the random forest. Higher values indicate that a variable contributes more to the model’s predictions.\n\n\n\nStep 1: User select input scenario\nStep 2: User click Predict Scenario\nOutput\nThe output will show predicted churn probability according to the input variable."
   },
   {
     "objectID": "Team/minutes_of_meeting.html",

@@ -833,7 +833,154 @@ p24 <- ggbarstats(customer, app_logins_group, churn_group, type="nonparametric",
 p23/p24
 ```
 
-# 5. Reference
+# 5. Storyboard - UI Design
+
+This dashboard is designed to help users explore customer behavior in a Latin American fintech platform. The storyboard structure guides users from a high-level overview to deeper analysis, including customer demographics, transaction patterns, customer segmentation, and churn analysis.
+
+The dashboard contains four main sections:
+
+1.  Summary
+
+2.  Exploration
+
+3.  Cluster Analysis
+
+4.  Decision Tree Analysis
+
+Each page allows users to interact with the data through filters, visualizations, and statistical analysis.
+
+## 5.1 Summary tab
+
+The Summary page provides a high-level overview of the customer dataset and key business metrics. It allows users to quickly understand the overall status of the customer base before exploring detailed analysis.
+
+![](images/clipboard-1194473738.png)
+
+At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These KPIs help decision-makers quickly assess the overall performance of the fintech platform.
+
+Below the KPI section, several charts provide an overview of customer characteristics and behaviors. These visualizations provide a quick understanding of the customer base and highlight patterns that may require further investigation.
+
+## 5.2 Exploration tab
+
+The Exploration page allows users to perform Exploratory Data Analysis (EDA) by dynamically selecting variables and visualization types and the confirmatory Data Analysis page allows users to statistically validate relationships between variables. This page helps users explore relationships between different customer attributes.
+
+### 5.2.1 Customer overview tab
+
+The main goal of this page is to allow users to interactively explore customer characteristics and distributions.
+
+![](images/clipboard-1352613092.png)
+
+At the top of the dashboard, three Key Performance Indicators (KPIs) summarize important metrics. These metrics provide quick insights into customer demographics and risk levels.
+
+#### Variable Selection
+
+There are a filter bar that users can choose X and Y variable type whether they want categorical or numerical variable. After select type of variable user can select which variable in that type that they want to discover the relationship in the Select X/Y Variable filter. User click Submit botton to display in the visualization.
+
+The visualization will be consisted of 4 possible pairs of x and y variable type. The visualization will shown in different plot as shown in table below
+
+| X Variable Type | Y Variable Type | The Visualization |
+|-----------------|-----------------|-------------------|
+| Numerical       | Numerical       | Scatter plot      |
+| Numerical       | Categorical     | Box plot          |
+| Categorical     | Numerical       | Box plot          |
+| Categorical     | Categorical     | Heatmap           |
+
+This allows users to explore different relationship between all variables and flexibility helps users view the data from different perspectives
+
+#### Export Option
+
+This allows users to easily share findings with stakeholders.
+
+#### Geographic Distribution
+
+A map visualization displays the geographical distribution of customers across regions, helping identify areas with higher customer concentration.
+
+### 5.2.2 Transaction behavior tab
+
+The Transaction Behavior tab allows users to analyze customer transaction patterns over time. This page focuses on understanding how different customer segments perform in terms of transaction activity and transaction value.
+
+By allowing users to filter the data based on customer value segments, time periods, and transaction types, this page helps identify behavioral patterns and usage trends within the fintech platform.
+
+![](images/clipboard-2791231218.png)
+
+#### Customer Lifetime Value Selection
+
+Users can select a Customer Lifetime Value (CLV) segment from the dropdown menu. This filter allows users to analyze how transaction behavior differs across customer value tiers. For example, higher-value customers may show higher transaction frequency or larger transaction amounts.
+
+#### Month Selection
+
+Users can select the month or time period of transactions to focus on specific periods of activity.
+
+#### Transaction Type Selection
+
+Users can filter the data based on type of transaction, such as:
+
+-   Transfer
+
+-   Payment
+
+-   Withdrawal
+
+-   Deposit
+
+This feature helps users understand which types of financial activities are most common among customers.
+
+The results are displayed using two line graphs in one plot which are transaction count line and transaction amount line. These will helps identify transaction frequency trends.
+
+### 5.2.3 Churn analysis tab
+
+The objective of this page is to allow users to confirm statistically significant relationships between customer attributes and churn risk. Instead of only visual exploration, this page also enables hypothesis testing.
+
+![](images/clipboard-715139934.png)
+
+#### Y Variable Selection
+
+Users can choose a categorical variable for the Y-axis to analyze relationships with churn groups.
+
+Examples include:
+
+-   Active products
+
+-   Customer segments
+
+-   Income level
+
+-   Education level
+
+#### Display Type Selection
+
+Users can choose how the results are displayed whether they want to see data in count or percentage value. This helps users interpret the results based on absolute numbers or proportions.
+
+#### Statistical Test Selection
+
+Users can choose the statistical test type which are parametric teat or non-parametric test which determines the significance threshold used in the hypothesis test.
+
+The results are displayed using stacked bar charts, showing the distribution of variables across churn probability groups.
+
+## 5.3 Cluster Analysis tab
+
+The Cluster Analysis tab allows users to explore customer segmentation using clustering techniques. The objective of this page is to identify groups of customers with similar characteristics or behaviors. By understanding these segments, businesses can develop more targeted marketing strategies and improve customer engagement.
+
+![](images/clipboard-3485063717.png)
+
+#### Number of Clusters Selection
+
+Users can select the number of clusters (k) from a slide bar. This feature allows users to experiment with different segmentation levels.
+
+The clustering results are displayed using a scatter plot visualization, where each point represents a customer and colors represent different clusters.
+
+## 5.4 Decision tree tab
+
+The Decision tree tab is designed to identify the key factors that influence customer churn probability. This page uses a decision tree model to analyze relationships between customer attributes and churn risk.
+
+![](images/clipboard-1868013280.png)
+
+The main output of this page is a decision tree diagram that illustrates how customers are classified into different churn probability groups based on their characteristics.
+
+Each branch of the tree represents a decision rule based on a specific variable, while each node represents a split in the data that separates customers into different groups.
+
+This visualization helps users easily interpret how different customer attributes influence churn risk.
+
+# 6. Reference
 
 <https://www.sciencedirect.com/science/article/pii/S2352340926000375>
 

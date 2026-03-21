@@ -2,6 +2,7 @@
 title: "ISSS608 Group 2 Project Meeting Minutes Records"
 author: "LI Huaqiu, SHIH Hua-Hsuan, Walaiporn Pawitranon"
 ---
+
 **Project Meeting 1:** Selection of Topic, Preparation for Proposal
 
 **Date:** 28-Feb-2026 (Saturday)
@@ -10,4 +11,4 @@ author: "LI Huaqiu, SHIH Hua-Hsuan, Walaiporn Pawitranon"
 
 **Attendees:** LI Huaqiu, SHIH Hua-Hsuan, Walaiporn Pawitranon
 
-[Click here to view meeting minutes](minutes of meeting/minutes_of_meeting_0228.qmd)
+[Click here to view meeting minutes](minutes%20of%20meeting/minutes_of_meeting_0228.qmd)

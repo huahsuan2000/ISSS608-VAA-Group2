@@ -10,6 +10,11 @@ website:
         text: Home
       - text: Overview
       - text: Shiny App
+        menu:
+        - text: "Shiny App"
+          href: https://huahsuan2000.shinyapps.io/Shinyapp-group/
+        - text: "User Guide"
+          href: "Shinyapp/user_guide.html"
       - text: Prototype
         menu: 
         - text: "EDA and CDA"
