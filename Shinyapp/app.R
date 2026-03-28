@@ -144,7 +144,6 @@ ui <- dashboardPage(
       # Summary Page
       tabItem(
         tabName = "summary",
-        h2("Fintech Customer Churn Overview"),
         
         # 1. KPI card
         fluidRow(
@@ -154,57 +153,46 @@ ui <- dashboardPage(
           valueBoxOutput("high_risk_count", width = 3)
         ),
         
-        # 2. Key insight
-        fluidRow(
-          box(
-            title = "Key Insight",
-            width = 12,
-            status = "primary",
-            solidHeader = TRUE,
-            uiOutput("summary_key_insight")
-          )
-        ),
-        
-        # 3. Main insight row
+        # 2. Main insight row
         fluidRow(
           box(
             title = "Churn Risk Heatmap by CLV Segment and App Engagement",
             width = 8,
             status = "danger",
             solidHeader = TRUE,
-            plotlyOutput("summary_churn_heatmap", height = 330)
+            plotlyOutput("summary_churn_heatmap", height = 245)
           ),
           box(
             title = "Overall Churn Risk Distribution",
             width = 4,
             status = "primary",
             solidHeader = TRUE,
-            plotlyOutput("summary_churn_dist", height = 330)
+            plotlyOutput("summary_churn_dist", height = 245)
           )
         ),
         
-        # 4. Supporting insight row
+        # 3. Supporting insight row
         fluidRow(
           box(
-            title = "Average Churn Probability by CLV Segment",
+            title = "Average Transaction Value",
             width = 4,
             status = "warning",
             solidHeader = TRUE,
-            plotlyOutput("summary_churn_clv", height = 260)
+            plotlyOutput("bulletPlot", height = 178)
           ),
           box(
             title = "Top High-Risk Customer Segments",
             width = 4,
             status = "warning",
             solidHeader = TRUE,
-            plotlyOutput("summary_top_risk_segments", height = 260)
+            plotlyOutput("summary_top_risk_segments", height = 178)
           ),
           box(
             title = "Engagement vs. Churn Risk (App Logins)",
             width = 4,
             status = "info",
             solidHeader = TRUE,
-            plotlyOutput("summary_engagement_churn", height = 260)
+            plotlyOutput("summary_engagement_churn", height = 178)
           )
         )
       ),
@@ -437,9 +425,8 @@ ui <- dashboardPage(
         )
       ),
       
-      # ==================================================
+
       # Cluster analysis
-      # ==================================================
       tabItem(
         tabName = "cluster",
         
@@ -481,7 +468,7 @@ ui <- dashboardPage(
             "Sample Size",
             min = 500,
             max = 2000,
-            value = 2000,
+            value = 1500,
             step = 500
           ),
           
@@ -534,9 +521,8 @@ ui <- dashboardPage(
         
       ),
       
-      # ==================================================
+
       # Decision Tree
-      # ==================================================
       tabItem(
         tabName = "decision_tree",
         
@@ -743,9 +729,8 @@ ui <- dashboardPage(
         )
       ),
       
-      # ==================================================
+
       # Random Forest
-      # ==================================================
       tabItem(
         tabName = "random_forest",
         
@@ -912,9 +897,8 @@ ui <- dashboardPage(
 
 server <- function(input, output, session) {
   
-  # ==================================================
+
   # Summary Page
-  # ==================================================
   
   # KPI 1
   output$total_customers <- renderValueBox({
@@ -1102,61 +1086,34 @@ server <- function(input, output, session) {
       )
   })
   
-  # Average churn by CLV
-  output$summary_churn_clv <- renderPlotly({
+  # bullet
+  output$bulletPlot <- renderPlotly({
     
-    clv_summary <- customer %>%
-      drop_na(clv_segment, churn_probability) %>%
-      group_by(clv_segment) %>%
+    plot_data <- customer %>%
+      group_by(preferred_transaction_type) %>%
       summarise(
-        avg_churn = mean(churn_probability, na.rm = TRUE),
-        n = n(),
-        .groups = "drop"
-      ) %>%
-      arrange(desc(avg_churn)) %>%
-      mutate(
-        clv_segment = reorder(clv_segment, avg_churn),
-        tooltip_text = paste0(
-          "CLV Segment: ", clv_segment,
-          "<br>Average Churn Risk: ", scales::percent(avg_churn, accuracy = 0.1),
-          "<br>Customers: ", scales::comma(n)
-        )
+        avg_value = mean(average_transaction_value, na.rm = TRUE)
       )
     
-    p <- ggplot(
-      clv_summary,
-      aes(
-        x = clv_segment,
-        y = avg_churn,
-        fill = avg_churn,
-        text = tooltip_text
-      )
-    ) +
-      geom_col(width = 0.68) +
-      coord_flip() +
-      scale_fill_gradient(
-        low = "#f9d5d3",
-        high = "#c0392b",
-        guide = "none"
-      ) +
-      scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+    target <- mean(plot_data$avg_value)
+    
+    p <- ggplot(plot_data, aes(
+      y = reorder(preferred_transaction_type, avg_value),
+      x = avg_value
+    )) +
+      geom_col(fill = "steelblue", width = 0.6) +
+      geom_vline(xintercept = target, linetype = "dashed", color = "red") +
+      
+      scale_x_continuous(labels = label_number(scale = 1e-6, suffix = "M")) +
+      
       labs(
-        x = NULL,
-        y = "Average Churn Risk"
+        x = "Average Transaction Value",
+        y = "Preferred Transaction"
       ) +
-      theme_minimal(base_size = 11) +
-      theme(
-        axis.text.y = element_text(face = "bold"),
-        panel.grid.major.y = element_blank()
-      )
+      theme_minimal()
     
-    ggplotly(p, tooltip = "text") %>%
-      layout(
-        margin = list(l = 70, r = 20, b = 40, t = 10),
-        font = list(size = 10)
-      )
-  })
-  
+    ggplotly(p)
+  })  
   # Top high-risk customer segments
   output$summary_top_risk_segments <- renderPlotly({
     
@@ -2086,7 +2043,7 @@ server <- function(input, output, session) {
     as.data.frame(out, stringsAsFactors = FALSE)
   }
   
-  # ----- Random Forest model reactive -----
+  #Random Forest model reactive
   rf_model_results <- eventReactive(input$rf_build_model, {
     tryCatch({
       req(input$rf_predictors)
@@ -2158,7 +2115,7 @@ server <- function(input, output, session) {
     })
   })
   
-  # ----- Random Forest scenario prediction -----
+  #Random Forest scenario prediction
   rf_scenario_result <- eventReactive(input$rf_predict_case, {
     tryCatch({
       req(rf_model_results())
@@ -2189,7 +2146,7 @@ server <- function(input, output, session) {
     })
   })
   
-  # ----- Value boxes -----
+  #Value boxes
   output$rf_rmse_box <- renderValueBox({
     req(rf_model_results())
     valueBox(
@@ -2231,7 +2188,7 @@ server <- function(input, output, session) {
     }
   })
   
-  # ----- Plots -----
+  #Plots
   output$rf_pred_actual_plot <- renderPlot({
     req(rf_model_results())
     req(isTRUE(rf_model_results()$ok))
@@ -2257,7 +2214,7 @@ server <- function(input, output, session) {
       theme_minimal(base_size = 12)
   })
   
-  # ----- Scenario inputs and prediction UI -----
+  #Scenario inputs and prediction UI
   output$rf_scenario_inputs <- renderUI({
     req(rf_model_results())
     req(isTRUE(rf_model_results()$ok))

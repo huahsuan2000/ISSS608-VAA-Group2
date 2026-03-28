@@ -10,7 +10,7 @@ title: "User guide"
 
 **Step 3:** User can hover over each interactive chart to view detailed values such as average churn probability and customer count.
 
-![](images/clipboard-2643667016.png)
+![](images/clipboard-893461885.png)
 
 ### Output Result
 
@@ -20,63 +20,37 @@ The result will be divided into 4 sections which are KPI Cards, Key Insight, Mai
 
 The KPI cards provide a quick overview of the overall customer churn situation.
 
-+-----------------------+---------------------------------------------------------------------------+
-| KPI Card              | Description                                                               |
-+=======================+===========================================================================+
-| Total Customers       | Shows the total number of customers in the dataset.                       |
-+-----------------------+---------------------------------------------------------------------------+
-| Total Transactions    | Shows the total transaction volume of all customers.                      |
-+-----------------------+---------------------------------------------------------------------------+
-| Avg Churn Probability | Shows the average churn probability across all customers.                 |
-+-----------------------+---------------------------------------------------------------------------+
-| High Risk Customers   | Shows the number of customers whose churn risk is classified as **High**. |
-+-----------------------+---------------------------------------------------------------------------+
+| KPI Card | Description |
+|----|----|
+| Total Customers | Shows the total number of customers in the dataset. |
+| Total Transactions | Shows the total transaction volume of all customers. |
+| Avg Churn Probability | Shows the average churn probability across all customers. |
+| High Risk Customers | Shows the number of customers whose churn risk is classified as **High**. |
 
 ![](images/clipboard-2311402515.png)
 
-## 2. Key Insight
-
-This section automatically highlights the most important churn patterns found in the dataset.
-
-+--------------------------+-------------------------------------------------------------------------------------------------------------+
-| Insight Type             | Description                                                                                                 |
-+==========================+=============================================================================================================+
-| Highest-risk combination | Shows which combination of **CLV segment** and **app engagement level** has the highest average churn risk. |
-+--------------------------+-------------------------------------------------------------------------------------------------------------+
-| Top customer segment     | Shows which **customer segment** has the highest average churn probability.                                 |
-+--------------------------+-------------------------------------------------------------------------------------------------------------+
-
-![](images/clipboard-738416263.png)
-
-## 3. Main Insight Charts
+## 2. Main Insight Charts
 
 The main insight charts focus on the overall churn pattern and the highest-risk customer groups.
 
-+------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| Chart                                                | Description                                                                                                                                        |
-+======================================================+====================================================================================================================================================+
+| Chart | Description |
+|----|----|
 | Churn Risk Heatmap by CLV Segment and App Engagement | Shows the average churn probability across combinations of **CLV segment** and **app engagement group**. Darker color indicates higher churn risk. |
-+------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
-| Overall Churn Risk Distribution                      | Shows the overall distribution of churn probability for all customers. A dashed vertical line indicates the average churn probability.             |
-+------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
+| Overall Churn Risk Distribution | Shows the overall distribution of churn probability for all customers. A dashed vertical line indicates the average churn probability. |
 
 ![](images/clipboard-3374270375.png)
 
-## 4. Supporting Insight Charts
+## 3. Supporting Insight Charts
 
 The supporting insight charts provide additional breakdowns of churn risk from different perspectives.
 
-+------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------+
-| Chart                                    | Description                                                                                                                    |
-+==========================================+================================================================================================================================+
-| Average Churn Probability by CLV Segment | Shows the average churn probability for each customer lifetime value segment.                                                  |
-+------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------+
-| Top High-Risk Customer Segments          | Shows the top customer segments with the highest average churn probability.                                                    |
-+------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------+
-| Engagement vs. Churn Risk (App Logins)   | Shows how average churn probability changes across different app login frequency groups such as **Rarely, Often, and Always**. |
-+------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------+
+| Chart | Description |
+|----|----|
+| Average Transaction Value | Shows the average transaction value across different preferred transaction types such as Transfer, Payment, Withdrawal, and Deposit. |
+| Top High-Risk Customer Segments | Shows the top customer segments with the highest average churn probability. |
+| Engagement vs. Churn Risk (App Logins) | Shows how average churn probability changes across different app login frequency groups such as **Rarely, Often, and Always**. |
 
-![](images/clipboard-3860526434.png)
+![](images/clipboard-2678429885.png)
 
 # Exploration page
 
@@ -152,11 +126,9 @@ The result will show transaction count in line chart and transaction amount in d
 
 The result will be divided into 2 tabs which are Statistical Test and VCD Mosaic. The graph shows statistical relationship between churn probability and the variable that user choose.
 
-+--------------------------------------+--------------------------------------+
 | Statistical Test                     | VCD Mosaic                           |
-+======================================+======================================+
+|--------------------------------------|--------------------------------------|
 | ![](images/clipboard-1328906704.png) | ![](images/clipboard-3442319517.png) |
-+--------------------------------------+--------------------------------------+
 
 # Predictive model page
 
@@ -168,17 +140,12 @@ The result will be divided into 2 tabs which are Statistical Test and VCD Mosaic
 
 The table below details parameters that can be adjusted to tune the decision tree model.
 
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Model Parameter                      | Parameter Description                                                                                                                                |
-+======================================+======================================================================================================================================================+
+| Model Parameter | Parameter Description |
+|----|----|
 | ![](images/clipboard-2792001097.png) | Controls how the dataset is divided into training and testing sets. For example, 0.8 means 80% of the data is used for training and 20% for testing. |
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ![](images/clipboard-1186602094.png) | Defines the minimum number of observations required in a node before the tree can split.                                                             |
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ![](images/clipboard-3233945708.png) | Sets the maximum number of levels the tree can grow. Deeper trees are more flexible but may overfit.                                                 |
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ![](images/clipboard-3215070177.png) | Controls whether a split is worthwhile. Higher CP makes the tree simpler, lower CP allows more splits.                                               |
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ![](images/clipboard-1186602094.png) | Defines the minimum number of observations required in a node before the tree can split. |
+| ![](images/clipboard-3233945708.png) | Sets the maximum number of levels the tree can grow. Deeper trees are more flexible but may overfit. |
+| ![](images/clipboard-3215070177.png) | Controls whether a split is worthwhile. Higher CP makes the tree simpler, lower CP allows more splits. |
 
 **Step 3:** User click build model
 
@@ -230,13 +197,10 @@ The Model visulisation will be divided into 4 tabs which are Decision Tree, Pred
 
 The table below details parameters that can be adjusted to tune the random forest model.
 
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Model Parameter                      | Parameter Description                                                                                                                                |
-+======================================+======================================================================================================================================================+
+| Model Parameter | Parameter Description |
+|----|----|
 | ![](images/clipboard-4157334791.png) | Controls how the dataset is divided into training and testing sets. For example, 0.8 means 80% of the data is used for training and 20% for testing. |
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
-| ![](images/clipboard-2694861636.png) | Defines how many trees are built in the random forest model.                                                                                         |
-+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+| ![](images/clipboard-2694861636.png) | Defines how many trees are built in the random forest model. |
 
 **Step 3:** User click build model
 
@@ -272,13 +236,10 @@ The Model visulisation will be divided into 3 tabs which are Predicted vs Actual
 
 The table below details parameters that can be adjusted to tune the cluster.
 
-+--------------------------------------+--------------------------------------------------------------------------------------+
-| Model Parameter                      | Parameter Description                                                                |
-+======================================+======================================================================================+
-| ![](images/clipboard-1646423594.png) | Defines how many clusters.                                                           |
-+--------------------------------------+--------------------------------------------------------------------------------------+
+| Model Parameter | Parameter Description |
+|----|----|
+| ![](images/clipboard-1646423594.png) | Defines how many clusters. |
 | ![](images/clipboard-3228055477.png) | how many data points (observations) that user want to include when forming clusters. |
-+--------------------------------------+--------------------------------------------------------------------------------------+
 
 **Step 3:** User click Run Clustering
 
@@ -286,8 +247,6 @@ The table below details parameters that can be adjusted to tune the cluster.
 
 The result will be divided into 4 tabs which are Elbow Method, Cluster Map, Summary Table, Heatmap.
 
-+--------------------------------------+--------------------------------------+-------------------------------------+-------------------------------------+
-| Elbow Method                         | Cluster Map                          | Summary Table                       | Heatmap                             |
-+======================================+======================================+=====================================+=====================================+
+| Elbow Method | Cluster Map | Summary Table | Heatmap |
+|----|----|----|----|
 | ![](images/clipboard-2957792673.png) | ![](images/clipboard-1606029294.png) | ![](images/clipboard-593541713.png) | ![](images/clipboard-439415881.png) |
-+--------------------------------------+--------------------------------------+-------------------------------------+-------------------------------------+
